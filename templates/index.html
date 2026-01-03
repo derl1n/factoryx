@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>Factoryx</title>
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo-fav.png')}}">
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo"><img src="../static/img/logo-nav.png"></div>
+    <ul class="nav-links">
+      <li><a href="#" data-page="home" class="nav-link nav-link1 active" data-translate="nav.factCheck">Перевірка фактів</a></li>
+      <li><a href="#" data-page="sources" class="nav-link nav-link2" data-translate="nav.sources">Корисні джерела</a></li>
+    </ul>
+    
+    <div class="nav-controls">
+      <div class="burger-menu" id="burger">
+        <div class="burger-line"></div>
+        <div class="burger-line"></div>
+        <div class="burger-line"></div>
+      </div>
+
+      <div class="lang-selector">
+        <button id="lang-btn" class="control-btn">🌐</button>
+        <div class="lang-dropdown hidden">
+          <div class="lang-option" data-lang="uk">🇺🇦 Українська</div>
+          <div class="lang-option" data-lang="en">🇬🇧 English</div>
+        </div>
+      </div>
+      <button id="theme-toggle" class="control-btn">🌙</button>
+    </div>
+  </nav>
+
+  <!-- Home Page -->
+  <div class="page" id="home-page">
+    <div class="container">
+      <div class="header">
+        <h1 class="main-title" data-translate="home.title">Перевірка фактів</h1>
+        <p class="subtitle" data-translate="home.subtitle"></p>
+      </div>
+
+      <!-- Mode Selection -->
+      <div class="mode-selector">
+        <label class="mode-option">
+          <input type="radio" name="mode" value="text" checked>
+          <span class="mode-label" data-translate="home.modeText">Тільки текст</span>
+        </label>
+        <label class="mode-option">
+          <input type="radio" name="mode" value="link">
+          <span class="mode-label" data-translate="home.modeLink">Тільки посилання</span>
+        </label>
+        <label class="mode-option">
+          <input type="radio" name="mode" value="both">
+          <span class="mode-label" data-translate="home.modeBoth">Текст + посилання</span>
+        </label>
+      </div>
+
+      <!-- Form -->
+      <form id="fact-check-form" class="check-form">
+        <div id="text-field" class="input-group">
+          <textarea id="text-input" rows="4" data-translate-placeholder="home.textPlaceholder" placeholder="Введіть текст для перевірки..."></textarea>
+        </div>
+        <div id="link-field" class="input-group hidden">
+          <input type="url" id="link-input" data-translate-placeholder="home.linkPlaceholder" placeholder="https://example.com">
+        </div>
+        <button type="submit" class="check-btn">
+          <span class="btn-icon">🔍</span>
+          <span data-translate="home.checkButton">Перевірити</span>
+        </button>
+      </form>
+
+      <!-- Loading -->
+      <div id="loading" class="loading-container hidden">
+        <div class="loading-spinner">
+          <div class="spinner-ring"></div>
+          <div class="spinner-ring"></div>
+        </div>
+        <p class="loading-text" data-translate="home.checking">Йде перевірка...</p>
+      </div>
+
+      <!-- Results -->
+      <div id="results" class="results-container hidden"></div>
+    </div>
+  </div>
+
+  <!-- Sources Page -->
+  <div class="page2 hidden" id="sources-page">
+    <div class="container">
+      <div class="header">
+        <h1 class="main-title" data-translate="sources.title">Корисні джерела</h1>
+        <p class="subtitle" data-translate="sources.subtitle">Перевірені ресурси для додаткової інформації</p>
+      </div>
+
+      <div class="sources-grid">
+        <div class="source-card">
+          <div class="source-icon">📰</div>
+          <h3 data-translate="sources.reuters">Reuters</h3>
+          <p data-translate="sources.reutersDesc">Міжнародна інформаційна організація</p>
+          <a href="https://www.reuters.com/" target="_blank" class="source-link">
+            <span data-translate="sources.visit">Відвідати</span> <span class="link-icon">↗</span>
+          </a>
+        </div>
+
+        <div class="source-card">
+          <div class="source-icon">🏛️</div>
+          <h3 data-translate="sources.bbc">BBC Reality Check</h3>
+          <p data-translate="sources.bbcDesc">Служба перевірки фактів BBC</p>
+          <a href="https://www.bbc.com/news/reality_check" target="_blank" class="source-link">
+            <span data-translate="sources.visit">Відвідати</span> <span class="link-icon">↗</span>
+          </a>
+        </div>
+
+        <div class="source-card">
+          <div class="source-icon">🔍</div>
+          <h3 data-translate="sources.snopes">Snopes</h3>
+          <p data-translate="sources.snopesDesc">Сайт перевірки міських легенд та чуток</p>
+          <a href="https://www.snopes.com/" target="_blank" class="source-link">
+            <span data-translate="sources.visit">Відвідати</span> <span class="link-icon">↗</span>
+          </a>
+        </div>
+
+        <div class="source-card">
+          <div class="source-icon">⚖️</div>
+          <h3 data-translate="sources.politifact">PolitiFact</h3>
+          <p data-translate="sources.politifactDesc">Сайт перевірки фактів, лауреат премії Пулітцера</p>
+          <a href="https://www.politifact.com/" target="_blank" class="source-link">
+            <span data-translate="sources.visit">Відвідати</span> <span class="link-icon">↗</span>
+          </a>
+        </div>
+
+        <div class="source-card">
+          <div class="source-icon">🏥</div>
+          <h3 data-translate="sources.cdc">CDC</h3>
+          <p data-translate="sources.cdcDesc">Центри контролю та профілактики захворювань</p>
+          <a href="https://www.cdc.gov/" target="_blank" class="source-link">
+            <span data-translate="sources.visit">Відвідати</span> <span class="link-icon">↗</span>
+          </a>
+        </div>
+
+        <div class="source-card">
+          <div class="source-icon">🌍</div>
+          <h3 data-translate="sources.who">WHO</h3>
+          <p data-translate="sources.whoDesc">Всесвітня організація охорони здоров'я</p>
+          <a href="https://www.who.int/" target="_blank" class="source-link">
+            <span data-translate="sources.visit">Відвідати</span> <span class="link-icon">↗</span>
+          </a>
+        </div>
+
+        <div class="source-card">
+          <div class="source-icon">🇺🇦</div>
+          <h3 data-translate="sources.stopfake">StopFake</h3>
+          <p data-translate="sources.stopfakeDesc">Українська організація перевірки фактів</p>
+          <a href="https://www.stopfake.org/" target="_blank" class="source-link">
+            <span data-translate="sources.visit">Відвідати</span> <span class="link-icon">↗</span>
+          </a>
+        </div>
+
+        <div class="source-card">
+          <div class="source-icon">📊</div>
+          <h3 data-translate="sources.vox">VoxUkraine</h3>
+          <p data-translate="sources.voxDesc">Українська аналітична платформа</p>
+          <a href="https://voxukraine.org/" target="_blank" class="source-link">
+            <span data-translate="sources.visit">Відвідати</span> <span class="link-icon">↗</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Tips Section -->
+      <div class="tips-section">
+        <h2 class="tips-title" data-translate="tips.title">💡 Поради для перевірки фактів</h2>
+        <div class="tips-grid">
+          <div class="tip-item">
+            <div class="tip-number">1</div>
+            <div class="tip-content">
+              <h4 data-translate="tips.checkMultipleSources">Перевіряйте кілька джерел</h4>
+              <p data-translate="tips.checkMultipleSourcesDesc">Завжди перевіряйте інформацію з кількох надійних джерел.</p>
+            </div>
+          </div>
+          <div class="tip-item">
+            <div class="tip-number">2</div>
+            <div class="tip-content">
+              <h4 data-translate="tips.primarySources">Шукайте первинні джерела</h4>
+              <p data-translate="tips.primarySourcesDesc">Знаходьте оригінальне джерело інформації, коли це можливо.</p>
+            </div>
+          </div>
+          <div class="tip-item">
+            <div class="tip-number">3</div>
+            <div class="tip-content">
+              <h4 data-translate="tips.checkDate">Перевіряйте дату публікації</h4>
+              <p data-translate="tips.checkDateDesc">Переконайтеся, що інформація актуальна та доречна.</p>
+            </div>
+          </div>
+          <div class="tip-item">
+            <div class="tip-number">4</div>
+            <div class="tip-content">
+              <h4 data-translate="tips.beSkeptical">Будьте скептичними</h4>
+              <p data-translate="tips.beSkepticalDesc">Ставте під сумнів надзвичайні твердження та перевіряйте докази.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/js/main.js"></script>
+</body>
+</html>
