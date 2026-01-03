@@ -9,7 +9,7 @@ load_dotenv()
 
 TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
 GEMINI_KEY = os.getenv('GEMINI_API_KEY')
-FLASK_API = 'http://127.0.0.1:5000/check'
+FLASK_API = os.getenv('FLASK_API_URL', 'http://127.0.0.1:5000/check')
 TG_API = f"https://api.telegram.org/bot{TOKEN}"
 
 print(f"🤖 Bot Token: {'OK' if TOKEN else 'MISSING'}")
