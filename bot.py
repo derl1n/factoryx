@@ -4,6 +4,8 @@ import requests
 import re
 from urllib.parse import unquote
 from dotenv import load_dotenv
+from flask import Flask
+from threading import Thread 
 
 load_dotenv()
 
@@ -467,7 +469,7 @@ def main():
                 continue
 
 if __name__ == '__main__':
-    # ✅ СПОЧАТКУ запускаємо Flask в окремому потоці
+    from threading import Thread
     flask_thread = Thread(target=run_flask)
     flask_thread.daemon = True
     flask_thread.start()
