@@ -9,10 +9,7 @@ load_dotenv()
 
 TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
 GEMINI_KEY = os.getenv('GEMINI_API_KEY')
-
-# ⚠️ ЗМІНЕНО ДЛЯ RENDER - замість localhost використовуємо змінну оточення
-FLASK_API = os.getenv('FLASK_API_URL', 'http://127.0.0.1:5000/check')
-
+FLASK_API = 'http://127.0.0.1:5000/check'
 TG_API = f"https://api.telegram.org/bot{TOKEN}"
 
 print(f"🤖 Bot Token: {'OK' if TOKEN else 'MISSING'}")
@@ -52,9 +49,9 @@ HELP_MSG = (
     "Як перевірити:\n"
     "1️⃣ Натисни кнопку \"🔍 Перевірити\"\n"
     "2️⃣ Потім надішли:\n"
-    "  • Або текст для перевірки (мін. 10 символів)\n"
-    "  • Або посилання на статтю\n"
-    "  • Або текст і посилання одночасно\n\n"
+    " • Або текст для перевірки (мін. 10 символів)\n"
+    " • Або посилання на статтю\n"
+    " • Або текст і посилання одночасно\n\n"
     "В групах:\n"
     "• Команда /check працює так само\n"
     "• Бот запитає, що перевірити\n\n"
@@ -105,13 +102,10 @@ def send_msg(chat_id, text, parse_mode='HTML', reply_to=None, keyboard=None):
         'parse_mode': parse_mode,
         'disable_web_page_preview': True
     }
-    
     if reply_to:
         data['reply_to_message_id'] = reply_to
-    
     if keyboard:
         data['reply_markup'] = keyboard
-    
     response = requests.post(f"{TG_API}/sendMessage", json=data)
     return response.json() if response.ok else None
 
@@ -123,7 +117,6 @@ def set_bot_commands():
         {"command": "help", "description": "📖 Інструкція"},
         {"command": "stats", "description": "📊 Статистика"}
     ]
-    
     try:
         requests.post(f"{TG_API}/setMyCommands", json={"commands": commands})
         print("✅ Команди встановлено")
@@ -138,7 +131,6 @@ def extract_text_and_link(message):
     urls = re.findall(r'https?://[^\s]+', message)
     link = urls[0] if urls else ""
     text = re.sub(r'https?://[^\s]+', '', message).strip()
-    
     return text, link
 
 def normalize_command(text):
@@ -149,7 +141,6 @@ def escape_html(text):
     """Екранує спецсимволи для HTML"""
     if not text:
         return text
-    
     return text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
 
 def get_domain_name(url):
@@ -158,12 +149,9 @@ def get_domain_name(url):
         from urllib.parse import urlparse
         parsed = urlparse(url)
         domain = parsed.netloc.replace('www.', '')
-        
         if 'wikipedia' in domain:
             return 'Wikipedia'
-        
         return domain
-        
     except:
         return 'Джерело'
 
@@ -202,6 +190,8 @@ def is_gibberish(text):
         if not has_vowels:
             return True
     
+    # ВИДАЛЕНО ПЕРЕВІРКУ НА УНІКАЛЬНІСТЬ - вона помилково блокувала нормальні тексти
+    
     return False
 
 # ==========================================================
@@ -211,12 +201,12 @@ def check_fact(text, link, chat_id, chat_type):
     try:
         # ❌ ВАЛІДАЦІЯ
         if text and is_gibberish(text):
-            send_msg(chat_id, "❌ Введіть твердження для перевірки",
+            send_msg(chat_id, "❌ Введіть твердження для перевірки", 
                     keyboard=get_main_keyboard() if chat_type == 'private' else None)
             return
         
         # 🔍 ТІЛЬКИ ТЕПЕР ПОКАЗУЄМО "Перевіряю"
-        send_msg(chat_id, "🔍 Перевіряю...",
+        send_msg(chat_id, "🔍 Перевіряю...", 
                 keyboard=get_main_keyboard() if chat_type == 'private' else None)
         
         payload = {'text': text, 'link': link, 'lang': 'uk'}
@@ -228,15 +218,13 @@ def check_fact(text, link, chat_id, chat_type):
                 error = error_data.get('error', 'Невідома помилка')
             except:
                 error = f"Помилка сервера (код {r.status_code})"
-            
-            send_msg(chat_id, escape_html(error),
+            send_msg(chat_id, escape_html(error), 
                     keyboard=get_main_keyboard() if chat_type == 'private' else None)
             return
         
         data = r.json()
-        
         if 'error' in data:
-            send_msg(chat_id, escape_html(data['error']),
+            send_msg(chat_id, escape_html(data['error']), 
                     keyboard=get_main_keyboard() if chat_type == 'private' else None)
             return
         
@@ -262,47 +250,44 @@ def check_fact(text, link, chat_id, chat_type):
             reply += f"🔗 Джерела перевірки:\n"
             for i, src in enumerate(sources[:5], 1):
                 domain = get_domain_name(src)
-                reply += f'{i}. {domain}\n'
+                reply += f'{i}. <a href="{src}">{domain}</a>\n'
             reply += "\n"
         
         if google_fc:
             reply += f"📰 Фактчеків: {len(google_fc)}\n"
-        
         if google_s:
             reply += f"🔍 Джерел: {len(google_s)}\n"
         
         if link and domain_check:
             sb = domain_check.get('safe_browsing', {})
             spam = domain_check.get('spamhaus', {})
-            
             if not sb.get('safe', True):
                 reply += f"\n⚠️ Небезпечне посилання!"
-            
             if spam.get('listed', False):
                 reply += f"\n⚠️ Домен у спам-списку!"
         
-        result = send_msg(chat_id, reply, parse_mode='HTML',
+        result = send_msg(chat_id, reply, parse_mode='HTML', 
                          keyboard=get_main_keyboard() if chat_type == 'private' else None)
         
         if not result:
             print("⚠️ Помилка HTML, відправляю без форматування")
             reply_plain = re.sub(r'<[^>]+>', '', reply)
-            send_msg(chat_id, reply_plain, parse_mode=None,
+            send_msg(chat_id, reply_plain, parse_mode=None, 
                     keyboard=get_main_keyboard() if chat_type == 'private' else None)
         
         print("✅ Перевірку завершено")
         
     except requests.exceptions.Timeout:
-        send_msg(chat_id, "⏱️ Таймаут запиту. Спробуй ще раз.",
+        send_msg(chat_id, "⏱️ Таймаут запиту. Спробуй ще раз.", 
                 keyboard=get_main_keyboard() if chat_type == 'private' else None)
     except requests.exceptions.ConnectionError:
-        send_msg(chat_id, "❌ Сервер не відповідає. Спробуй пізніше.",
+        send_msg(chat_id, "❌ Сервер не відповідає. Перевір, чи запущено app.py", 
                 keyboard=get_main_keyboard() if chat_type == 'private' else None)
     except Exception as e:
         print(f"💥 Помилка перевірки: {e}")
         import traceback
         traceback.print_exc()
-        send_msg(chat_id, "❌ Помилка перевірки. Спробуй ще раз або напиши @d2rl1n",
+        send_msg(chat_id, "❌ Помилка перевірки. Спробуй ще раз або напиши @d2rl1n", 
                 keyboard=get_main_keyboard() if chat_type == 'private' else None)
 
 # ==========================================================
@@ -315,14 +300,12 @@ def main():
     
     while True:
         updates = get_updates(offset)
-        
         if not updates.get('ok', False) or not updates.get('result'):
             time.sleep(2)
             continue
         
         for u in updates['result']:
             offset = u['update_id'] + 1
-            
             message = u.get('message', {})
             chat = message.get('chat', {})
             chat_id = chat.get('id')
@@ -337,11 +320,9 @@ def main():
             if new_chat_member:
                 bot_info_response = requests.get(f"{TG_API}/getMe").json()
                 bot_id = bot_info_response.get('result', {}).get('id')
-                
                 if new_chat_member.get('id') == bot_id:
                     send_msg(chat_id, GROUP_WELCOME_MSG)
                     print(f"✅ Додано в групу: {chat_id}")
-                
                 continue
             
             original_text = text
@@ -389,12 +370,10 @@ def main():
                         total = stats.get('total_checks', 0)
                         today = stats.get('today', 0)
                         week = stats.get('week', 0)
-                        
                         reply = f"📊 Статистика Factoryx:\n\n"
                         reply += f"📈 Всього перевірок: {total}\n"
                         reply += f"🗓 Сьогодні: {today}\n"
                         reply += f"📅 За тиждень: {week}"
-                        
                         send_msg(chat_id, reply, keyboard=get_main_keyboard())
                     except Exception as e:
                         print(f"Помилка статистики: {e}")
@@ -446,12 +425,10 @@ def main():
                         total = stats.get('total_checks', 0)
                         today = stats.get('today', 0)
                         week = stats.get('week', 0)
-                        
                         reply = f"📊 Статистика Factoryx:\n\n"
                         reply += f"📈 Всього перевірок: {total}\n"
                         reply += f"🗓 Сьогодні: {today}\n"
                         reply += f"📅 За тиждень: {week}"
-                        
                         send_msg(chat_id, reply)
                     except Exception as e:
                         print(f"Помилка статистики: {e}")
@@ -470,7 +447,7 @@ def main():
                 check_text = original_text
                 
                 if not check_text or len(check_text.strip()) < 10:
-                    send_msg(chat_id, "❌ Текст занадто короткий (мінімум 10 символів)",
+                    send_msg(chat_id, "❌ Текст занадто короткий (мінімум 10 символів)", 
                             keyboard=get_main_keyboard() if chat_type == 'private' else None)
                     continue
                 
@@ -490,4 +467,10 @@ def main():
                 continue
 
 if __name__ == '__main__':
+    # ✅ СПОЧАТКУ запускаємо Flask в окремому потоці
+    flask_thread = Thread(target=run_flask)
+    flask_thread.daemon = True
+    flask_thread.start()
+    
+    # ✅ ПОТІМ запускаємо бота
     main()
