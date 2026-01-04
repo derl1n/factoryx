@@ -944,6 +944,12 @@ def check_fact():
     
     return jsonify(result)
 
+try:
+    init_db()
+    print("✅ База даних ініціалізована")
+except Exception as e:
+    print(f"⚠️ Помилка БД: {e}")
+    
 if __name__ == "__main__":
     init_db()
     port = int(os.environ.get("PORT", 5000))
