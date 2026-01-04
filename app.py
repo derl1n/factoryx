@@ -691,6 +691,42 @@ def check_fact():
     link = (data.get("link") or "").strip()
     lang = data.get("lang", "uk")
     
+    if text or link:
+        try:
+            with get_db() as conn:
+                with conn.cursor() as cur:
+                    query_hash = hash_text(text or link[:200])
+                    
+                    cur.execute("""
+                        SELECT score, created_at 
+                        FROM checks 
+                        WHERE query_hash = %s 
+                        AND created_at > NOW() - INTERVAL '24 hours'
+                        ORDER BY created_at DESC 
+                        LIMIT 1
+                    """, (query_hash,))
+                    
+                    cached = cur.fetchone()
+                    if cached:
+                        print(f"✅ Кеш знайдено! Score: {cached['score']}, час: {cached['created_at']}")
+                        return jsonify({
+                            'mode': 'both' if (text and link) else ('text' if text else 'link'),
+                            'score': cached['score'],
+                            'cached': True,
+                            'cached_at': cached['created_at'].isoformat(),
+                            'gemini': {
+                                'score': cached['score'],
+                                'verdict': 'true' if cached['score'] >= 80 else ('uncertain' if cached['score'] >= 50 else 'false'),
+                                'explanation': 'Результат з кешу (перевірено менше 24 годин тому)',
+                                'sources': []
+                            },
+                            'google_factcheck': [],
+                            'google_search': [],
+                            'domain_check': {}
+                        })
+        except Exception as e:
+            print(f"⚠️ Помилка кешу: {e}")
+
     if text and link:
         mode = "both"
     elif text:
@@ -944,12 +980,6 @@ def check_fact():
     
     return jsonify(result)
 
-try:
-    init_db()
-    print("✅ База даних ініціалізована")
-except Exception as e:
-    print(f"⚠️ Помилка БД: {e}")
-    
 if __name__ == "__main__":
     init_db()
     port = int(os.environ.get("PORT", 5000))
