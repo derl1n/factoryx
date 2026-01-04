@@ -698,7 +698,7 @@ def check_fact():
                     query_hash = hash_text(text or link[:200])
                     
                     cur.execute("""
-                        SELECT score, created_at 
+                        SELECT score, verdict, explanation, sources, created_at 
                         FROM checks 
                         WHERE query_hash = %s 
                         AND created_at > NOW() - INTERVAL '24 hours'
@@ -709,6 +709,14 @@ def check_fact():
                     cached = cur.fetchone()
                     if cached:
                         print(f"✅ Кеш знайдено! Score: {cached['score']}, час: {cached['created_at']}")
+                        
+                        sources = []
+                        if cached['sources']:
+                            try:
+                                sources = json.loads(cached['sources'])
+                            except:
+                                sources = []
+                        
                         return jsonify({
                             'mode': 'both' if (text and link) else ('text' if text else 'link'),
                             'score': cached['score'],
@@ -716,9 +724,9 @@ def check_fact():
                             'cached_at': cached['created_at'].isoformat(),
                             'gemini': {
                                 'score': cached['score'],
-                                'verdict': 'true' if cached['score'] >= 80 else ('uncertain' if cached['score'] >= 50 else 'false'),
-                                'explanation': 'Результат з кешу (перевірено менше 24 годин тому)',
-                                'sources': []
+                                'verdict': cached['verdict'] or 'uncertain',
+                                'explanation': cached['explanation'] or 'Результат з кешу',
+                                'sources': sources
                             },
                             'google_factcheck': [],
                             'google_search': [],
@@ -726,7 +734,7 @@ def check_fact():
                         })
         except Exception as e:
             print(f"⚠️ Помилка кешу: {e}")
-
+    
     if text and link:
         mode = "both"
     elif text:
@@ -954,17 +962,20 @@ def check_fact():
                 query_hash = hash_text(text or query[:200])
                 url_hash = hash_text(link) if link else None
                 
+                # Зберігаємо повний результат
+                sources_json = json.dumps(gem.get('sources', []))
+                
                 cur.execute('''
-                    INSERT INTO checks (query_hash, url_hash, score, created_at)
-                    VALUES (%s, %s, %s, %s)
-                ''', (query_hash, url_hash, score, datetime.now()))
-            
-            conn.commit()
-        
-        print(f"✅ Статистика збережена: score={score}")
-        
+                    INSERT INTO checks (query_hash, url_hash, score, verdict, explanation, sources, created_at)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s)
+                ''', (query_hash, url_hash, score, gem.get('verdict', 'uncertain'), 
+                    gem.get('explanation', ''), sources_json, datetime.now()))
+                
+                conn.commit()
+                print(f"✅ Статистика збережена: score={score}")
     except Exception as e:
         print(f"❌ Статистика: {e}")
+
     
     result = {
         "mode": mode,
