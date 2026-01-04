@@ -5,7 +5,7 @@ import re
 from urllib.parse import unquote
 from dotenv import load_dotenv
 from flask import Flask
-from threading import Thread 
+from threading import Thread
 
 load_dotenv()
 
@@ -162,37 +162,29 @@ def is_gibberish(text):
     if not text or len(text.strip()) < 5:
         return True
     
-    # Видаляємо пробіли для аналізу
     text_no_spaces = text.replace(' ', '').replace('\n', '')
     
-    # Якщо занадто короткий після очищення
     if len(text_no_spaces) < 5:
         return True
     
-    # Перевірка на наявність нормальних слів (мінімум 2 літери)
     words = re.findall(r'[a-zA-Zа-яА-ЯіїєґІЇЄҐ]{2,}', text)
-    if len(words) >= 3:  # Якщо є хоча б 3 нормальні слова - не білиберда
+    if len(words) >= 3:
         return False
     
-    # Багато однакових символів підряд (ааааааа)
     if re.search(r'(.)\1{5,}', text):
         return True
     
-    # Клавіатурні патерни (тільки якщо текст дуже короткий)
     if len(text) < 20:
         keyboard_patterns = ['qwerty', 'asdfgh', 'zxcvbn', 'йцукен', 'фывап', 'ячсмит']
         text_lower = text.lower()
         if any(pattern in text_lower for pattern in keyboard_patterns):
             return True
     
-    # Перевірка на відсутність голосних (але тільки для коротких текстів)
     if len(text_no_spaces) < 30:
         vowels = 'aeiouаеєиіїоуюя'
         has_vowels = any(char.lower() in vowels for char in text)
         if not has_vowels:
             return True
-    
-    # ВИДАЛЕНО ПЕРЕВІРКУ НА УНІКАЛЬНІСТЬ - вона помилково блокувала нормальні тексти
     
     return False
 
@@ -201,13 +193,11 @@ def is_gibberish(text):
 # ==========================================================
 def check_fact(text, link, chat_id, chat_type):
     try:
-        # ❌ ВАЛІДАЦІЯ
         if text and is_gibberish(text):
             send_msg(chat_id, "❌ Введіть твердження для перевірки", 
                     keyboard=get_main_keyboard() if chat_type == 'private' else None)
             return
         
-        # 🔍 ТІЛЬКИ ТЕПЕР ПОКАЗУЄМО "Перевіряю"
         send_msg(chat_id, "🔍 Перевіряю...", 
                 keyboard=get_main_keyboard() if chat_type == 'private' else None)
         
@@ -293,6 +283,20 @@ def check_fact(text, link, chat_id, chat_type):
                 keyboard=get_main_keyboard() if chat_type == 'private' else None)
 
 # ==========================================================
+# FLASK HEALTH CHECK
+# ==========================================================
+app = Flask(__name__)
+
+@app.route('/')
+def health():
+    return "Bot is running!", 200
+
+def run_flask():
+    port = int(os.environ.get('PORT', 10000))
+    print(f"🌐 Flask запущено на порті {port}")
+    app.run(host='0.0.0.0', port=port)
+
+# ==========================================================
 # MAIN
 # ==========================================================
 def main():
@@ -318,7 +322,6 @@ def main():
             if not chat_id:
                 continue
             
-            # Додавання в групу
             if new_chat_member:
                 bot_info_response = requests.get(f"{TG_API}/getMe").json()
                 bot_id = bot_info_response.get('result', {}).get('id')
@@ -330,15 +333,11 @@ def main():
             original_text = text
             text_lower = text.lower()
             
-            # Нормалізація команд для груп
             if chat_type in ['group', 'supergroup']:
                 text = normalize_command(text)
             
             print(f"📨 [{chat_type}] {chat_id}: {text[:40]}...")
             
-            # ===========================================
-            # ОБРОБКА КНОПОК (тільки для приватних чатів)
-            # ===========================================
             if chat_type == 'private':
                 if text_lower == '🔍 перевірити' or text == '/check':
                     user_states[chat_id] = 'waiting_for_input'
@@ -387,9 +386,6 @@ def main():
                     send_msg(chat_id, WELCOME_MSG, keyboard=get_main_keyboard())
                     continue
             
-            # ===========================================
-            # ОБРОБКА КОМАНД ДЛЯ ГРУП
-            # ===========================================
             if chat_type in ['group', 'supergroup']:
                 if text == '/start':
                     user_states.pop(chat_id, None)
@@ -437,14 +433,10 @@ def main():
                         send_msg(chat_id, "📊 Статистика тимчасово недоступна")
                     continue
                 
-                # Ігноруємо не-команди в групах
                 if not original_text.startswith('/'):
                     if user_states.get(chat_id) != 'waiting_for_input':
                         continue
             
-            # ===========================================
-            # ОБРОБКА ВВЕДЕННЯ ТЕКСТУ/ПОСИЛАННЯ
-            # ===========================================
             if user_states.get(chat_id) == 'waiting_for_input':
                 check_text = original_text
                 
@@ -458,7 +450,6 @@ def main():
                 user_states.pop(chat_id, None)
                 continue
             
-            # ✅ НОВИЙ КОД: якщо текст без команди/кнопки в приватному чаті
             if chat_type == 'private' and not text.startswith('/'):
                 send_msg(
                     chat_id,
@@ -469,10 +460,7 @@ def main():
                 continue
 
 if __name__ == '__main__':
-    from threading import Thread
     flask_thread = Thread(target=run_flask)
     flask_thread.daemon = True
     flask_thread.start()
-    
-    # ✅ ПОТІМ запускаємо бота
     main()
