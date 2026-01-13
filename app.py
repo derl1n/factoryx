@@ -11,6 +11,7 @@ from langdetect import detect
 from googletrans import Translator
 import dns.resolver
 from bs4 import BeautifulSoup
+from flask import send_from_directory
 import re
 from datetime import datetime
 import hashlib
@@ -990,6 +991,14 @@ def check_fact():
     }
     
     return jsonify(result)
+
+@app.route('/sitemap.xml')
+def sitemap():
+    return send_from_directory('.', 'sitemap.xml')
+
+@app.route('/robots.txt')
+def robots():
+    return send_from_directory('.', 'robots.txt')
 
 if __name__ == "__main__":
     init_db()
