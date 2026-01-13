@@ -286,7 +286,13 @@ document.addEventListener("DOMContentLoaded", () => {
         
         document.querySelectorAll("[data-translate]").forEach(el => {
             const key = el.getAttribute("data-translate");
-            if (translations[lang][key]) el.textContent = translations[lang][key];
+            if (translations[lang][key]) {
+                    el.textContent = translations[lang][key];
+                } else if (key === 'home.title') {
+                    el.textContent = 'Перевірка фактів';
+                } else if (key === 'home.subtitle') {
+                    el.textContent = 'За допомогою наукового інструменту перевірки правдивості';
+                }
         });
         
         document.querySelectorAll("[data-translate-placeholder]").forEach(el => {

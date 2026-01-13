@@ -4,7 +4,7 @@ import requests
 import psycopg2
 from psycopg2.extras import RealDictCursor
 import socket
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, Response
 from urllib.parse import urlparse
 from dotenv import load_dotenv
 from langdetect import detect
