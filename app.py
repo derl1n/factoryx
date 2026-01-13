@@ -997,8 +997,13 @@ def sitemap():
     return send_from_directory('.', 'sitemap.xml')
 
 @app.route('/robots.txt')
-def robots():
-    return send_from_directory('.', 'robots.txt')
+def robots_txt():
+    content = """User-agent: *
+Allow: /
+
+Sitemap: https://factoryx.com.ua/sitemap.xml"""
+    return Response(content, mimetype='text/plain')
+
 
 if __name__ == "__main__":
     init_db()
