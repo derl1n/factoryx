@@ -51,6 +51,11 @@ An advanced fact-checking tool that combines AI (Perplexity AI & Google Gemini) 
 - git clone https://github.com/derl1n/factoryx.git
 - cd factoryx
 
+### Install Dependencies
+The requirements.txt file includes all necessary Python packages:
+- bash
+- pip install -r requirements.txt
+
 ### Environment Setup
 Create a .env file in the project root:
 
