@@ -1,4 +1,4 @@
-# 🔍 Factoryx - AI-Powered Fact-Checking Platform
+<img width="1747" height="327" alt="image" src="https://github.com/user-attachments/assets/c335ddbe-3f21-4090-9398-5c09bc26b968" /># 🔍 Factoryx - AI-Powered Fact-Checking Platform
 
 An advanced fact-checking tool that combines AI (Perplexity AI & Google Gemini) with multiple verification APIs to analyze the credibility of text statements and web articles.
 
@@ -47,9 +47,9 @@ An advanced fact-checking tool that combines AI (Perplexity AI & Google Gemini) 
 - API keys (see Configuration section)
 
 ### Clone Repository
-bash
-git clone https://github.com/derl1n/factoryx.git
-cd factoryx
+- bash
+- git clone https://github.com/derl1n/factoryx.git
+- cd factoryx
 
 ### Environment Setup
 Create a .env file in the project root:
@@ -69,7 +69,7 @@ Database Initialization
 The database will auto-initialize on first run. Ensure PostgreSQL is running and the DATABASE_URL is correct.
 
 ## 🚀 Usage
-Running the Web Application
+### Running the Web Application
 - bash
 - python app.py
 - The server will start on http://localhost:5000
@@ -173,7 +173,7 @@ factoryx/
 ## 📞 Support
 For issues, questions, or suggestions:
 
-- Contact via Telegram: [@d2rl1n](https://t.me/d2rl1n)
+- Telegram: [@d2rl1n](https://t.me/d2rl1n)
 - Email: lovov513@gmail.com
 
 ⚠️ Disclaimer: This tool provides AI-assisted fact-checking but should not be the sole source of truth. Always verify important information through multiple trusted sources.
