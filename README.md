@@ -1,4 +1,4 @@
-# 🔍 Factoryx - AI-Powered Fact-Checking Platform
+<img width="1747" height="327" alt="image" src="https://github.com/user-attachments/assets/c335ddbe-3f21-4090-9398-5c09bc26b968" /># 🔍 Factoryx - AI-Powered Fact-Checking Platform
 
 An advanced fact-checking tool that combines AI (Perplexity AI & Google Gemini) with multiple verification APIs to analyze the credibility of text statements and web articles.
 
@@ -54,57 +54,51 @@ cd factoryx
 ### Environment Setup
 Create a .env file in the project root:
 
-# Database
-DATABASE_URL=postgresql://user:password@host:port/database
-# AI APIs
-GEMINI_API_KEY=your_gemini_key
-PERPLEXITY_API_KEY=your_perplexity_key
-# Google APIs
-GOOGLE_FACTCHECK_KEY=your_factcheck_key
-GOOGLE_SAFE_BROWSING_KEY=your_safebrowsing_key
-GOOGLE_SEARCH_KEY=your_search_key
-GOOGLE_SEARCH_CX=your_custom_search_engine_id
-# Content Moderation
-SIGHTENGINE_USER=your_sightengine_user
-SIGHTENGINE_SECRET=your_sightengine_secret
-# Telegram Bot (optional)
-TELEGRAM_BOT_TOKEN=your_bot_token
+- DATABASE_URL=postgresql://user:password@host:port/database
+- PERPLEXITY_API_KEY=your_perplexity_key
+- GEMINI_API_KEY=your_gemini_key
+- GOOGLE_FACTCHECK_KEY=your_factcheck_key
+- GOOGLE_SAFE_BROWSING_KEY=your_safebrowsing_key
+- GOOGLE_SEARCH_KEY=your_search_key
+- GOOGLE_SEARCH_CX=your_custom_search_engine_id
+- SIGHTENGINE_USER=your_sightengine_user
+- SIGHTENGINE_SECRET=your_sightengine_secret
+- TELEGRAM_BOT_TOKEN=your_bot_token
+
 Database Initialization
 The database will auto-initialize on first run. Ensure PostgreSQL is running and the DATABASE_URL is correct.
 
-# 🚀 Usage
+## 🚀 Usage
 Running the Web Application
-bash
-python app.py
-The server will start on http://localhost:5000
+- bash
+- python app.py
+- The server will start on http://localhost:5000
 
-# Running the Telegram Bot
-bash
-python bot.py
-Deployment
-The project is configured for deployment on:
-
-
-# 🔧 API Configuration
-# Required APIs
-
-Perplexity AI - Get API Key ⭢ https://www.perplexity.ai/account/api/
-Google Gemini - Get API Key ⭢ https://aistudio.google.com/app/api-keys
-Google Fact Check - Get API Key ⭢ https://console.cloud.google.com/
-Google Safe Browsing - Get API Key ⭢ https://console.cloud.google.com/
-Google Search - Get API Key ⭢ https://console.cloud.google.com/
-Sightengine - Get API Key ⭢ https://sightengine.com/
+### Running the Telegram Bot
+- bash
+- python bot.py
+- Deployment
 
 
-# 📱 Telegram Bot Commands
+### 🔧 API Configuration
+
+- Perplexity AI - Get API Key ⭢ https://www.perplexity.ai/account/api/=
+- Google Gemini - Get API Key ⭢ https://aistudio.google.com/app/api-keys
+- Google Fact Check - Get API Key ⭢ https://console.cloud.google.com/
+- Google Safe Browsing - Get API Key ⭢ https://console.cloud.google.com/
+- Google Search - Get API Key ⭢ https://console.cloud.google.com/
+- Sightengine - Get API Key ⭢ https://sightengine.com/
+
+
+### 📱 Telegram Bot Commands
 Command	Description
-/start	Initialize bot and show welcome message
-/check	Start fact-checking process
-/cancel	Cancel current verification
-/help	Show detailed instructions
-/stats	View verification statistics
+- /start	Initialize bot and show welcome message
+- /check	Start fact-checking process
+- /cancel	Cancel current verification
+- /help	Show detailed instructions
+- /stats	View verification statistics
 
-# 🎯 Verification Modes
+### 🎯 Verification Modes
 1. Text Only
 Analyzes statements, claims, or questions for factual accuracy.
 
@@ -114,14 +108,15 @@ Extracts content from URLs and verifies article credibility.
 3. Text + Link
 Combines text claim with source URL for comprehensive analysis.
 
-# 📊 Credibility Scoring
+### 📊 Credibility Scoring
 Score Range	Verdict	Meaning
-80-100	✅ Likely True	High confidence in accuracy
-50-79	⚠️ Needs Verification	Mixed or uncertain evidence
-0-49	❌ Likely False	Strong indicators of misinformation
+- 80-100	✅ Likely True	High confidence in accuracy
+- 50-79	⚠️ Needs Verification	Mixed or uncertain evidence
+- 0-49	❌ Likely False	Strong indicators of misinformation
 
-# 🏗️ Project Structure
+### 🏗️ Project Structure
 
+```
 factoryx/
 ├── app.py # Flask web application
 ├── bot.py # Telegram bot handler
@@ -142,42 +137,43 @@ factoryx/
 │ │ └── logo.png # Main logo
 │ │ └── logo-nav.png # Navigation logo
 └── README.md # This file
+```
 
-# 🔒 Security Features
-# Blocked Content:  
-Russian (.ru, .рф, .su) and Belarusian (.by) propaganda sources
-Casino and gambling websites
-Adult/NSFW content
-Known malware/phishing domains
-Spam-listed domains (Spamhaus)
-Content Validation
-Question detection (requires statements, not questions)
-Subjective claim filtering
-Gibberish/spam text detection
-Minimum text length requirements (10 characters, 2 words)
+## 🔒 Security Features
+### Blocked Content:  
+- Russian (.ru, .рф, .su) and Belarusian (.by) propaganda sources
+- Casino and gambling websites
+- Adult/NSFW content
+- Known malware/phishing domains
+- Spam-listed domains (Spamhaus)
+- Content Validation
+- Question detection (requires statements, not questions)
+- Subjective claim filtering
+- Gibberish/spam text detection
+- Minimum text length requirements (10 characters, 2 words)
 
-# 🌍 Supported Languages
-Ukrainian (uk) - Primary language
-English (en) - Full support
-Auto-detection with fallback translation
+## 🌍 Supported Languages
+- Ukrainian (uk) - Primary language
+- English (en) - Full support
+- Auto-detection with fallback translation
 
-# 👤 Author d2rl1n
-GitHub: @derl1n
-Telegram: @d2rl1n
-Telegram bot: @factoryx_factcheck_bot
-Website: factoryx.com.ua
+## 👤 Author d2rl1n
+- GitHub: [@derl1n](https://github.com/derl1n)
+- Telegram: [@d2rl1n](https://t.me/d2rl1n)
+- Telegram bot: [@factoryx_factcheck_bot](https://t.me/factoryx_factcheck_bot)
+- Website: [factoryx.com.ua](https://factoryx.com.ua/)
 
-# 🙏 Acknowledgments
-Perplexity AI for powerful fact-checking capabilities
-Google for Gemini AI, Safe Browsing, and Fact Check APIs
-Sightengine for content moderation
-BeautifulSoup for web scraping
-Flask community for excellent web framework
+## 🙏 Acknowledgments
+- Perplexity AI for powerful fact-checking capabilities
+- Google for Gemini AI, Safe Browsing, and Fact Check APIs
+- Sightengine for content moderation
+- BeautifulSoup for web scraping
+- Flask community for excellent web framework
 
-# 📞 Support
+## 📞 Support
 For issues, questions, or suggestions:
 
-Contact via Telegram: @d2rl1n
-Email: lovov513@gmail.com
+- Contact via Telegram: @d2rl1n
+- Email: lovov513@gmail.com
 
 ⚠️ Disclaimer: This tool provides AI-assisted fact-checking but should not be the sole source of truth. Always verify important information through multiple trusted sources.
