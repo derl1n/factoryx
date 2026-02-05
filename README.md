@@ -1,4 +1,4 @@
-<img width="1747" height="327" alt="image" src="https://github.com/user-attachments/assets/c335ddbe-3f21-4090-9398-5c09bc26b968" /># 🔍 Factoryx - AI-Powered Fact-Checking Platform
+# 🔍 Factoryx - AI-Powered Fact-Checking Platform
 
 An advanced fact-checking tool that combines AI (Perplexity AI & Google Gemini) with multiple verification APIs to analyze the credibility of text statements and web articles.
 
@@ -173,7 +173,7 @@ factoryx/
 ## 📞 Support
 For issues, questions, or suggestions:
 
-- Contact via Telegram: @d2rl1n
+- Contact via Telegram: [@d2rl1n](https://t.me/d2rl1n)
 - Email: lovov513@gmail.com
 
 ⚠️ Disclaimer: This tool provides AI-assisted fact-checking but should not be the sole source of truth. Always verify important information through multiple trusted sources.
