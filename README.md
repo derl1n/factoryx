@@ -105,7 +105,7 @@ Command	Description
 
 ### 🎯 Verification Modes
 1. Text Only
-Analyzes statements, claims, or questions for factual accuracy.
+Verifies factual accuracy of statements, claims, and assertions.
 
 2. Link Only
 Extracts content from URLs and verifies article credibility.
