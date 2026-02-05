@@ -70,7 +70,7 @@ Create a .env file in the project root:
 - SIGHTENGINE_SECRET=your_sightengine_secret
 - TELEGRAM_BOT_TOKEN=your_bot_token
 
-Database Initialization
+### Database Initialization
 The database will auto-initialize on first run. Ensure PostgreSQL is running and the DATABASE_URL is correct.
 
 ## 🚀 Usage
