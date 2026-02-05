@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-    /* ==== Элементы ==== */
     const pages = document.querySelectorAll(".page, .page2");
     const page = document.querySelector(".page");
     const navMenu = document.querySelector(".nav-links");
@@ -19,7 +18,6 @@ document.addEventListener("DOMContentLoaded", () => {
     let currentTheme = localStorage.getItem("theme") || "light";
     let requestMade = false;
 
-    /* ==== Переводы ==== */
     const translations = {
         uk: {
             "nav.factCheck": "Перевірка фактів",
@@ -141,7 +139,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    /* ==== Утилиты ==== */
     function cleanMarkdown(text) {
         if (!text) return "";
         return text.replace(/\*\*(.*?)\*\*/g, "$1").replace(/__(.*?)__/g, "$1");
@@ -174,7 +171,6 @@ document.addEventListener("DOMContentLoaded", () => {
         return labels[lang].low;
     }
 
-    /* ==== Адаптивный зсув ==== */
     function updateTranslate() {
         const width = window.innerWidth;
         let translateValue = 0;
@@ -205,7 +201,6 @@ document.addEventListener("DOMContentLoaded", () => {
         page.style.transform = `translateY(${translateValue}%)`;
     }
 
-    /* ==== Бургер ==== */
     if (burger && navMenu) {
         burger.addEventListener("click", () => {
             navMenu.classList.toggle("show");
@@ -230,7 +225,6 @@ document.addEventListener("DOMContentLoaded", () => {
     
     updateMargin();
 
-    /* ==== Переход между страницами ==== */
     [navLink1, navLink2].forEach(link => {
         if (!link) return;
         link.addEventListener("click", (e) => {
@@ -254,7 +248,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    /* ==== Тема ==== */
     function applyTheme(theme) {
         document.body.classList.toggle("dark", theme === "dark");
         themeToggle.textContent = theme === "dark" ? "☀️" : "🌙";
@@ -268,7 +261,6 @@ document.addEventListener("DOMContentLoaded", () => {
         applyTheme(currentTheme);
     });
 
-    /* ==== Переклад ==== */
     langBtn.addEventListener("click", () => {
         langDropdown.classList.toggle("hidden");
     });
@@ -300,7 +292,6 @@ document.addEventListener("DOMContentLoaded", () => {
             if (translations[lang][key]) el.placeholder = translations[lang][key];
         });
 
-        // Перекладаємо заголовки в результатах
         const verdictTitle = resultsDiv.querySelector(".verdict-title");
         if (verdictTitle) {
             verdictTitle.textContent = `📊 ${translations[lang]["results.score"]}`;
@@ -349,7 +340,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    /* ==== Переключение режимов ==== */
     modeRadios.forEach(radio => {
         radio.addEventListener("change", () => {
             const mode = document.querySelector('input[name="mode"]:checked').value;
@@ -372,7 +362,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    /* ==== Отправка формы ==== */
     factCheckForm.addEventListener("submit", async e => {
         e.preventDefault();
         
@@ -441,7 +430,6 @@ document.addEventListener("DOMContentLoaded", () => {
         loadingDiv.classList.add("hidden");
     }
 
-    /* ==== Рендер результатов ==== */
     function renderResults(data) {
         const t = translations[currentLang];
         

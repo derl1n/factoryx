@@ -18,10 +18,7 @@ import hashlib
 
 load_dotenv()
 
-# ==========================================================
-# DATABASE CONFIGURATION - ЗМІНЕНО ДЛЯ RENDER
-# ==========================================================
-DATABASE_URL = os.getenv("DATABASE_URL")  # Render автоматично додає це
+DATABASE_URL = os.getenv("DATABASE_URL")  
 
 GOOGLE_API_KEY = os.getenv("GOOGLE_FACTCHECK_KEY")
 SAFE_BROWSING_KEY = os.getenv("GOOGLE_SAFE_BROWSING_KEY")
@@ -35,9 +32,6 @@ SIGHTENGINE_SECRET = os.getenv("SIGHTENGINE_SECRET")
 app = Flask(__name__, template_folder="templates", static_folder="static")
 translator = Translator()
 
-# ==========================================================
-# DATABASE FUNCTIONS - ЗМІНЕНО ДЛЯ POSTGRESQL
-# ==========================================================
 def get_db():
     """Підключення до PostgreSQL"""
     conn = psycopg2.connect(DATABASE_URL, cursor_factory=RealDictCursor)
@@ -48,7 +42,6 @@ def init_db():
     try:
         with get_db() as conn:
             with conn.cursor() as cur:
-                # Читаємо SQL з init_db.sql
                 with open("init_db.sql", "r", encoding="utf-8") as f:
                     sql = f.read()
                 cur.execute(sql)
@@ -57,33 +50,27 @@ def init_db():
     except Exception as e:
         print(f"⚠️ Помилка ініціалізації БД: {e}")
 
-# ==========================================================
-# HASHING FUNCTIONS
-# ==========================================================
 def hash_text(text):
     """Хешує текст за допомогою SHA-256"""
     if not text:
         return None
     return hashlib.sha256(text.encode('utf-8')).hexdigest()
 
-# ==========================================================
-# BLOCKED DOMAINS
-# ==========================================================
+
 BLOCKED_DOMAINS = [
-    # Російські та білоруські домени
     '.ru', '.рф', '.su',
     '.by',
     'kremlin', 'tass.', 'ria.', 'rbc.', 'kommersant.', 'interfax.',
     'lenta.', 'gazeta.', 'russian.rt.', 'sputnik', 'iz.ru',
     'forbes.ru', 'vedomosti.', 'rossiyskaya-gazeta.', 'rg.ru',
     'belta.by', 'sb.by', 'ont.by',
-    # Казино
+
     'casino', 'казино', 'bet', 'betting', 'ставки', 'poker', 'покер',
     'slots', 'слоты', 'jackpot', 'джекпот', 'gambling', 'азартні',
     'azino', 'vulkan', 'вулкан', 'joycasino', 'slot', 'pin-up',
     'pinup', '1xbet', 'fonbet', 'parimatch', 'leon', 'winline',
     'betfair', 'bwin', '888casino', 'slottica', 'riobet', '777',
-    # Дорослий контент (18+)
+
     'porn', 'порно', 'xxx', 'sex', 'секс', 'adult', 'xvideos',
     'pornhub', 'xnxx', 'redtube', 'youporn', 'tube8', 'spankwire',
     'keezmovies', 'chaturbate', 'livejasmin', 'bongacams', 'stripchat',
@@ -107,7 +94,6 @@ def get_block_reason(url):
         return None
     url_lower = url.lower()
     
-    # Перевірка на російські/білоруські
     russian_domains = ['.ru', '.рф', '.su', 'kremlin', 'tass.', 'ria.', 'rbc.',
                       'kommersant.', 'interfax.', 'lenta.', 'gazeta.', 'sputnik']
     belarusian_domains = ['.by', 'belta.by', 'sb.by', 'ont.by']
@@ -119,7 +105,6 @@ def get_block_reason(url):
         if domain in url_lower:
             return "belarusian"
     
-    # Перевірка на казино
     casino_keywords = ['casino', 'казино', 'bet', 'betting', 'ставки', 'poker',
                       'покер', 'slots', 'слоты', 'gambling', 'azino', 'vulkan',
                       '1xbet', 'fonbet', 'parimatch', '777']
@@ -127,7 +112,6 @@ def get_block_reason(url):
         if keyword in url_lower:
             return "casino"
     
-    # Перевірка на 18+
     adult_keywords = ['porn', 'порно', 'xxx', 'sex', 'adult', 'pornhub',
                      'xnxx', 'nude', 'naked', 'nsfw', 'erotic', 'onlyfans']
     for keyword in adult_keywords:
@@ -152,9 +136,6 @@ def filter_sources(sources):
     
     return filtered
 
-# ==========================================================
-# API ПЕРЕВІРКА ADULT/CASINO КОНТЕНТУ
-# ==========================================================
 def check_adult_content_sightengine(url):
     """Перевіряє URL на дорослий контент через Sightengine API"""
     if not SIGHTENGINE_USER or not SIGHTENGINE_SECRET:
@@ -174,12 +155,10 @@ def check_adult_content_sightengine(url):
         
         data = r.json()
         
-        # Перевірка на дорослий контент
         nudity = data.get('nudity', {})
         raw_score = nudity.get('raw', 0)
         partial_score = nudity.get('partial', 0)
         
-        # Якщо ймовірність дорослого контенту > 50%
         if raw_score > 0.5 or partial_score > 0.6:
             return {"checked": True, "blocked": True, "type": "adult", "confidence": max(raw_score, partial_score)}
         
@@ -192,11 +171,9 @@ def check_adult_content_sightengine(url):
 def check_gambling_content(url):
     """Перевіряє URL на казино через аналіз контенту сторінки"""
     try:
-        # Завантажуємо сторінку
         r = requests.get(url, timeout=5, headers={"User-Agent": "Mozilla/5.0"})
         soup = BeautifulSoup(r.content, "html.parser")
         
-        # Шукаємо ключові слова казино в тексті
         text_content = soup.get_text().lower()
         gambling_keywords = [
             'casino', 'казино', 'poker', 'покер', 'slots', 'слоти',
@@ -205,10 +182,8 @@ def check_gambling_content(url):
             'бонус депозит', 'bonus deposit', 'free spins'
         ]
         
-        # Рахуємо кількість збігів
         matches = sum(1 for keyword in gambling_keywords if keyword in text_content)
         
-        # Якщо знайдено більше 3 ключових слів - ймовірно казино
         if matches >= 3:
             return {"checked": True, "blocked": True, "type": "casino", "matches": matches}
         
@@ -249,9 +224,6 @@ def check_safe_browsing_extended(url):
         print(f"⚠️ Safe Browsing error: {e}")
         return {"safe": True}
 
-# ==========================================================
-# LANGUAGE DETECTION + TRANSLATION
-# ==========================================================
 def detect_language(text):
     try:
         return detect(text)
@@ -275,9 +247,6 @@ def translate_api():
     
     return jsonify({"translated": translate_text(text, target)})
 
-# ==========================================================
-# QUESTION DETECTION
-# ==========================================================
 def is_question(text):
     clean = text.strip().lower()
     if clean.endswith("?"):
@@ -295,9 +264,6 @@ def is_question(text):
     
     return False
 
-# ==========================================================
-# SUBJECTIVE DETECTION
-# ==========================================================
 def is_subjective(text):
     subjective_words = [
         "крутий", "поганий", "жахливий", "добрий", "гарний",
@@ -308,9 +274,6 @@ def is_subjective(text):
     t = text.lower()
     return any(w in t for w in subjective_words)
 
-# ==========================================================
-# GIBBERISH DETECTION
-# ==========================================================
 def is_gibberish(text):
     """Перевіряє чи текст є білібердою"""
     if not text or len(text.strip()) < 5:
@@ -341,9 +304,6 @@ def is_gibberish(text):
     
     return False
 
-# ==========================================================
-# EXTRACT ARTICLE DATE
-# ==========================================================
 def extract_article_date(soup, url):
     """Витягує дату публікації статті з HTML"""
     try:
@@ -374,9 +334,6 @@ def extract_article_date(soup, url):
     except:
         return None
 
-# ==========================================================
-# CLEAN CITATIONS
-# ==========================================================
 def clean_citations(text):
     """Видаляє цитування типу [1], [2], [3]"""
     if not text:
@@ -387,9 +344,6 @@ def clean_citations(text):
     
     return cleaned
 
-# ==========================================================
-# GOOGLE FACTCHECK
-# ==========================================================
 def google_factcheck(query):
     try:
         url = f"https://factchecktools.googleapis.com/v1alpha1/claims:search?query={query}&key={GOOGLE_API_KEY}"
@@ -415,9 +369,6 @@ def google_factcheck(query):
     except:
         return []
 
-# ==========================================================
-# GOOGLE SEARCH
-# ==========================================================
 def google_search(query):
     try:
         url = "https://www.googleapis.com/customsearch/v1"
@@ -443,9 +394,6 @@ def google_search(query):
     except:
         return []
 
-# ==========================================================
-# PERPLEXITY CHECK
-# ==========================================================
 def perplexity_check(text, article_date=None):
     """Перевірка через Perplexity Sonar API"""
     try:
@@ -561,9 +509,7 @@ def perplexity_check(text, article_date=None):
         traceback.print_exc()
         return {"error": str(e)}
 
-# ==========================================================
-# GEMINI CHECK (BACKUP)
-# ==========================================================
+
 def gemini_check(text, long=False):
     MAX_LENGTH = 2000 if long else 1000
     if len(text) > MAX_LENGTH:
@@ -612,9 +558,6 @@ def gemini_check(text, long=False):
         print(f"❌ Gemini: {e}")
         return {"error": str(e)}
 
-# ==========================================================
-# DOMAIN CHECK
-# ==========================================================
 def check_spamhaus(domain):
     try:
         q = ".".join(reversed(domain.split("."))) + ".zen.spamhaus.org"
@@ -646,9 +589,6 @@ def check_safe_browsing(url):
     except:
         return {"safe": True}
 
-# ==========================================================
-# ROUTES
-# ==========================================================
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -682,9 +622,7 @@ def get_stats():
         print(f"❌ Статистика: {e}")
         return jsonify({"error": "Database error"}), 500
 
-# ==========================================================
-# MAIN FACT CHECK
-# ==========================================================
+
 @app.route("/check", methods=["POST"])
 def check_fact():
     data = request.json
@@ -786,7 +724,6 @@ def check_fact():
     
     errors = error_messages.get(lang, error_messages["uk"])
     
-    # ПЕРЕВІРКА НА ЗАБОРОНЕНІ САЙТИ (КЛЮЧОВІ СЛОВА)
     if link and is_blocked_source(link):
         block_reason = get_block_reason(link)
         
@@ -826,7 +763,6 @@ def check_fact():
     if text and is_gibberish(text):
         return jsonify({"error": errors["gibberish"]}), 400
     
-    # ПЕРЕВІРКА ПОСИЛАННЯ ЧЕРЕЗ API
     if link and link.startswith("http"):
         domain = urlparse(link).netloc
         print(f"🔍 Перевірка безпеки: {domain}")
@@ -838,7 +774,6 @@ def check_fact():
             print(f"  ❌ Домен НЕ існує!")
             return jsonify({"error": errors["domain_not_exist"]}), 400
         
-        # Перевірка на фішинг
         safe_check = check_safe_browsing(link)
         spam_check = check_spamhaus(domain)
         
@@ -853,7 +788,6 @@ def check_fact():
             print("🚨 ДОМЕН В СПАМ-СПИСКУ!")
             return jsonify({"error": errors["spam"]}), 400
         
-        # АВТОМАТИЧНА ПЕРЕВІРКА ADULT КОНТЕНТУ (якщо є API)
         if SIGHTENGINE_USER and SIGHTENGINE_SECRET:
             adult_check = check_adult_content_sightengine(link)
             print(f"  🔞 Adult Check: {adult_check}")
@@ -862,7 +796,6 @@ def check_fact():
                 print("🚨 ВИЯВЛЕНО ДОРОСЛИЙ КОНТЕНТ!")
                 return jsonify({"error": errors["blocked_adult_detected"]}), 400
         
-        # АВТОМАТИЧНА ПЕРЕВІРКА КАЗИНО (через аналіз контенту)
         gambling_check = check_gambling_content(link)
         print(f"  🎰 Gambling Check: {gambling_check}")
         
@@ -963,7 +896,6 @@ def check_fact():
                 query_hash = hash_text(text or query[:200])
                 url_hash = hash_text(link) if link else None
                 
-                # Зберігаємо повний результат
                 sources_json = json.dumps(gem.get('sources', []))
                 
                 cur.execute('''

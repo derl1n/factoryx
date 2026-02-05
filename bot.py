@@ -64,9 +64,6 @@ HELP_MSG = (
     "💬 Підтримка: @d2rl1n"
 )
 
-# ==========================================================
-# КНОПКИ
-# ==========================================================
 def get_main_keyboard():
     """Головна клавіатура для приватних чатів"""
     return {
@@ -89,9 +86,6 @@ def get_cancel_keyboard():
         "one_time_keyboard": False
     }
 
-# ==========================================================
-# TELEGRAM API
-# ==========================================================
 def get_updates(offset=None):
     params = {'offset': offset, 'timeout': 30}
     r = requests.get(f"{TG_API}/getUpdates", params=params, timeout=40)
@@ -125,9 +119,6 @@ def set_bot_commands():
     except Exception as e:
         print(f"⚠️ Помилка команд: {e}")
 
-# ==========================================================
-# HELPERS
-# ==========================================================
 def extract_text_and_link(message):
     """Витягує текст та посилання з повідомлення"""
     urls = re.findall(r'https?://[^\s]+', message)
@@ -188,9 +179,6 @@ def is_gibberish(text):
     
     return False
 
-# ==========================================================
-# FACT CHECK
-# ==========================================================
 def check_fact(text, link, chat_id, chat_type):
     try:
         if text and is_gibberish(text):
@@ -282,9 +270,6 @@ def check_fact(text, link, chat_id, chat_type):
         send_msg(chat_id, "❌ Помилка перевірки. Спробуй ще раз або напиши @d2rl1n", 
                 keyboard=get_main_keyboard() if chat_type == 'private' else None)
 
-# ==========================================================
-# FLASK HEALTH CHECK
-# ==========================================================
 app = Flask(__name__)
 
 @app.route('/')
@@ -296,9 +281,6 @@ def run_flask():
     print(f"🌐 Flask запущено на порті {port}")
     app.run(host='0.0.0.0', port=port)
 
-# ==========================================================
-# MAIN
-# ==========================================================
 def main():
     offset = None
     set_bot_commands()
