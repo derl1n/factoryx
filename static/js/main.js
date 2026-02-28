@@ -136,6 +136,301 @@ document.addEventListener("DOMContentLoaded", () => {
             "tips.checkDateDesc": "Make sure the information is current and relevant.",
             "tips.beSkeptical": "Be skeptical",
             "tips.beSkepticalDesc": "Question extraordinary claims and check evidence."
+        },
+        es: {
+            "nav.factCheck": "Verificación de Hechos",
+            "nav.sources": "Fuentes",
+            "home.title": "Verificación de Hechos",
+            "home.subtitle": "Herramienta científica rápida de verificación de hechos",
+            "home.modeText": "Solo texto",
+            "home.modeLink": "Solo enlace",
+            "home.modeBoth": "Texto + Enlace",
+            "home.textPlaceholder": "Ingrese texto para verificar...",
+            "home.linkPlaceholder": "https://example.com",
+            "home.checkButton": "Verificar",
+            "home.checking": "Verificando...",
+            "results.title": "Resultados",
+            "results.factcheck": "Google FactCheck",
+            "results.search": "Google Search",
+            "results.gemini": "Perplexity AI",
+            "results.domain": "Verificación de dominio",
+            "results.score": "Puntuación de credibilidad",
+            "results.sources": "Fuentes de verificación",
+            "notfound": "Nada encontrado",
+            "safe": "✅ Seguro",
+            "unsafe": "❌ Inseguro",
+            "notblacklist": "✅ No en lista negra",
+            "blacklist": "❌ En lista negra",
+            "errorText": "❌ Ingrese texto",
+            "errorLink": "❌ Ingrese un enlace",
+            "errorBoth": "❌ Rellene todos los campos",
+            "errorTextShort": "❌ Ingrese texto (mínimo 10 caracteres y 2 palabras)",
+            "errorQuestion": "❌ Ingrese una afirmación, no una pregunta",
+            "errorSubjective": "❌ Esta es una afirmación subjetiva y no se puede verificar",
+            "sources.title": "Fuentes útiles",
+            "sources.subtitle": "Recursos verificados para información adicional",
+            "sources.reuters": "Reuters",
+            "sources.reutersDesc": "Organización internacional de noticias",
+            "sources.bbc": "BBC Reality Check",
+            "sources.bbcDesc": "Servicio de verificación de hechos de BBC",
+            "sources.snopes": "Snopes",
+            "sources.snopesDesc": "Sitio de verificación de leyendas urbanas",
+            "sources.politifact": "PolitiFact",
+            "sources.politifactDesc": "Sitio de verificación de hechos, ganador del premio Pulitzer",
+            "sources.cdc": "CDC",
+            "sources.cdcDesc": "Centros para el Control y la Prevención de Enfermedades",
+            "sources.who": "OMS",
+            "sources.whoDesc": "Organización Mundial de la Salud",
+            "sources.stopfake": "StopFake",
+            "sources.stopfakeDesc": "Organización ucraniana de verificación de hechos",
+            "sources.vox": "VoxUkraine",
+            "sources.voxDesc": "Plataforma analítica ucraniana",
+            "sources.visit": "Visitar",
+            "tips.title": "💡 Consejos de verificación de hechos",
+            "tips.checkMultipleSources": "Verificar múltiples fuentes",
+            "tips.checkMultipleSourcesDesc": "Siempre verifique información de múltiples fuentes confiables.",
+            "tips.primarySources": "Buscar fuentes primarias",
+            "tips.primarySourcesDesc": "Encuentre la fuente original cuando sea posible.",
+            "tips.checkDate": "Verificar fecha de publicación",
+            "tips.checkDateDesc": "Asegúrese de que la información sea actual y relevante.",
+            "tips.beSkeptical": "Sea escéptico",
+            "tips.beSkepticalDesc": "Cuestione las afirmaciones extraordinarias y verifique las pruebas."
+        },
+        fr: {
+            "nav.factCheck": "Vérification des Faits",
+            "nav.sources": "Sources",
+            "home.title": "Vérification des Faits",
+            "home.subtitle": "Outil scientifique rapide de vérification des faits",
+            "home.modeText": "Texte uniquement",
+            "home.modeLink": "Lien uniquement",
+            "home.modeBoth": "Texte + Lien",
+            "home.textPlaceholder": "Entrez le texte à vérifier...",
+            "home.linkPlaceholder": "https://example.com",
+            "home.checkButton": "Vérifier",
+            "home.checking": "Vérification en cours...",
+            "results.title": "Résultats",
+            "results.factcheck": "Google FactCheck",
+            "results.search": "Google Search",
+            "results.gemini": "Perplexity AI",
+            "results.domain": "Vérification de domaine",
+            "results.score": "Score de crédibilité",
+            "results.sources": "Sources de vérification",
+            "notfound": "Rien trouvé",
+            "safe": "✅ Sûr",
+            "unsafe": "❌ Non sûr",
+            "notblacklist": "✅ Pas sur liste noire",
+            "blacklist": "❌ Sur liste noire",
+            "errorText": "❌ Entrez le texte",
+            "errorLink": "❌ Entrez un lien",
+            "errorBoth": "❌ Remplissez tous les champs",
+            "errorTextShort": "❌ Entrez le texte (minimum 10 caractères et 2 mots)",
+            "errorQuestion": "❌ Entrez une affirmation, pas une question",
+            "errorSubjective": "❌ C'est une affirmation subjective et ne peut pas être vérifiée",
+            "sources.title": "Sources utiles",
+            "sources.subtitle": "Ressources vérifiées pour des informations supplémentaires",
+            "sources.reuters": "Reuters",
+            "sources.reutersDesc": "Organisation internationale de nouvelles",
+            "sources.bbc": "BBC Reality Check",
+            "sources.bbcDesc": "Service de vérification des faits de la BBC",
+            "sources.snopes": "Snopes",
+            "sources.snopesDesc": "Site de vérification des légendes urbaines",
+            "sources.politifact": "PolitiFact",
+            "sources.politifactDesc": "Site de vérification des faits, lauréat du prix Pulitzer",
+            "sources.cdc": "CDC",
+            "sources.cdcDesc": "Centres de contrôle et de prévention des maladies",
+            "sources.who": "OMS",
+            "sources.whoDesc": "Organisation mondiale de la santé",
+            "sources.stopfake": "StopFake",
+            "sources.stopfakeDesc": "Organisation ukrainienne de vérification des faits",
+            "sources.vox": "VoxUkraine",
+            "sources.voxDesc": "Plateforme analytique ukrainienne",
+            "sources.visit": "Visiter",
+            "tips.title": "💡 Conseils de vérification des faits",
+            "tips.checkMultipleSources": "Vérifier plusieurs sources",
+            "tips.checkMultipleSourcesDesc": "Vérifiez toujours les informations auprès de plusieurs sources fiables.",
+            "tips.primarySources": "Chercher des sources primaires",
+            "tips.primarySourcesDesc": "Trouvez la source originale si possible.",
+            "tips.checkDate": "Vérifier la date de publication",
+            "tips.checkDateDesc": "Assurez-vous que les informations sont actuelles et pertinentes.",
+            "tips.beSkeptical": "Soyez skeptique",
+            "tips.beSkepticalDesc": "Remettez en question les affirmations extraordinaires et vérifiez les preuves."
+        },
+        de: {
+            "nav.factCheck": "Faktenchecking",
+            "nav.sources": "Quellen",
+            "home.title": "Faktenchecking",
+            "home.subtitle": "Schnelles wissenschaftliches Faktenprüfungstool",
+            "home.modeText": "Nur Text",
+            "home.modeLink": "Nur Link",
+            "home.modeBoth": "Text + Link",
+            "home.textPlaceholder": "Text zum Überprüfen eingeben...",
+            "home.linkPlaceholder": "https://example.com",
+            "home.checkButton": "Überprüfen",
+            "home.checking": "Wird überprüft...",
+            "results.title": "Ergebnisse",
+            "results.factcheck": "Google FactCheck",
+            "results.search": "Google Search",
+            "results.gemini": "Perplexity AI",
+            "results.domain": "Domain-Überprüfung",
+            "results.score": "Glaubwürdigkeitspunktzahl",
+            "results.sources": "Überprüfungsquellen",
+            "notfound": "Nichts gefunden",
+            "safe": "✅ Sicher",
+            "unsafe": "❌ Unsicher",
+            "notblacklist": "✅ Nicht auf Blacklist",
+            "blacklist": "❌ Auf Blacklist",
+            "errorText": "❌ Text eingeben",
+            "errorLink": "❌ Link eingeben",
+            "errorBoth": "❌ Alle Felder ausfüllen",
+            "errorTextShort": "❌ Text eingeben (mindestens 10 Zeichen und 2 Wörter)",
+            "errorQuestion": "❌ Geben Sie eine Aussage ein, keine Frage",
+            "errorSubjective": "❌ Dies ist eine subjektive Aussage und kann nicht überprüft werden",
+            "sources.title": "Nützliche Quellen",
+            "sources.subtitle": "Verifizierte Ressourcen für zusätzliche Informationen",
+            "sources.reuters": "Reuters",
+            "sources.reutersDesc": "Internationale Nachrichtenorganisation",
+            "sources.bbc": "BBC Reality Check",
+            "sources.bbcDesc": "BBC-Faktenprüfungsdienst",
+            "sources.snopes": "Snopes",
+            "sources.snopesDesc": "Website zur Überprüfung von Mythen und Gerüchten",
+            "sources.politifact": "PolitiFact",
+            "sources.politifactDesc": "Faktenprüfungsseite, Pulitzer-Preisträger",
+            "sources.cdc": "CDC",
+            "sources.cdcDesc": "Zentren für Krankheitskontrolle und Prävention",
+            "sources.who": "WHO",
+            "sources.whoDesc": "Weltgesundheitsorganisation",
+            "sources.stopfake": "StopFake",
+            "sources.stopfakeDesc": "Ukrainische Faktenprüfungsorganisation",
+            "sources.vox": "VoxUkraine",
+            "sources.voxDesc": "Ukrainische Analyseplattform",
+            "sources.visit": "Besuchen",
+            "tips.title": "💡 Tipps zur Faktenprüfung",
+            "tips.checkMultipleSources": "Mehrere Quellen überprüfen",
+            "tips.checkMultipleSourcesDesc": "Überprüfen Sie Informationen immer aus mehreren zuverlässigen Quellen.",
+            "tips.primarySources": "Suchen Sie nach primären Quellen",
+            "tips.primarySourcesDesc": "Finden Sie die ursprüngliche Quelle, wenn möglich.",
+            "tips.checkDate": "Veröffentlichungsdatum überprüfen",
+            "tips.checkDateDesc": "Stellen Sie sicher, dass die Informationen aktuell und relevant sind.",
+            "tips.beSkeptical": "Seien Sie skeptisch",
+            "tips.beSkepticalDesc": "Stellen Sie außergewöhnliche Aussagen in Frage und überprüfen Sie Beweise."
+        },
+        pl: {
+            "nav.factCheck": "Weryfikacja Faktów",
+            "nav.sources": "Źródła",
+            "home.title": "Weryfikacja Faktów",
+            "home.subtitle": "Szybkie naukowe narzędzie weryfikacji faktów",
+            "home.modeText": "Tylko tekst",
+            "home.modeLink": "Tylko link",
+            "home.modeBoth": "Tekst + Link",
+            "home.textPlaceholder": "Wprowadź tekst do sprawdzenia...",
+            "home.linkPlaceholder": "https://example.com",
+            "home.checkButton": "Sprawdź",
+            "home.checking": "Sprawdzanie...",
+            "results.title": "Wyniki",
+            "results.factcheck": "Google FactCheck",
+            "results.search": "Google Search",
+            "results.gemini": "Perplexity AI",
+            "results.domain": "Weryfikacja domeny",
+            "results.score": "Ocena wiarygodności",
+            "results.sources": "Źródła weryfikacji",
+            "notfound": "Nic nie znaleziono",
+            "safe": "✅ Bezpiecznie",
+            "unsafe": "❌ Niebezpiecznie",
+            "notblacklist": "✅ Nie na czarnej liście",
+            "blacklist": "❌ Na czarnej liście",
+            "errorText": "❌ Wprowadź tekst",
+            "errorLink": "❌ Wprowadź link",
+            "errorBoth": "❌ Wypełnij wszystkie pola",
+            "errorTextShort": "❌ Wprowadź tekst (minimum 10 znaków i 2 słowa)",
+            "errorQuestion": "❌ Wprowadź stwierdzenie, a nie pytanie",
+            "errorSubjective": "❌ To stwierdzenie jest subiektywne i nie można go zweryfikować",
+            "sources.title": "Przydatne źródła",
+            "sources.subtitle": "Zweryfikowane zasoby do dodatkowych informacji",
+            "sources.reuters": "Reuters",
+            "sources.reutersDesc": "Międzynarodowa agencja informacyjna",
+            "sources.bbc": "BBC Reality Check",
+            "sources.bbcDesc": "Usługa weryfikacji faktów BBC",
+            "sources.snopes": "Snopes",
+            "sources.snopesDesc": "Serwis weryfikacji legend miejskich",
+            "sources.politifact": "PolitiFact",
+            "sources.politifactDesc": "Serwis weryfikacji faktów, laureat nagrody Pulitzera",
+            "sources.cdc": "CDC",
+            "sources.cdcDesc": "Centra Kontroli i Zapobiegania Chorobom",
+            "sources.who": "WHO",
+            "sources.whoDesc": "Światowa Organizacja Zdrowia",
+            "sources.stopfake": "StopFake",
+            "sources.stopfakeDesc": "Ukraińska organizacja weryfikacji faktów",
+            "sources.vox": "VoxUkraine",
+            "sources.voxDesc": "Ukraińska platforma analityczna",
+            "sources.visit": "Odwiedź",
+            "tips.title": "💡 Porady dotyczące weryfikacji faktów",
+            "tips.checkMultipleSources": "Sprawdzaj wiele źródeł",
+            "tips.checkMultipleSourcesDesc": "Zawsze weryfikuj informacje z wielu wiarygodnych źródeł.",
+            "tips.primarySources": "Szukaj źródeł pierwotnych",
+            "tips.primarySourcesDesc": "Znajdź źródło pierwotne, gdy to możliwe.",
+            "tips.checkDate": "Sprawdzaj datę publikacji",
+            "tips.checkDateDesc": "Upewnij się, że informacja jest aktualna i istotna.",
+            "tips.beSkeptical": "Bądź skeptyczny",
+            "tips.beSkepticalDesc": "Kwestionuj nadzwyczajne twierdzenia i weryfikuj dowody."
+        },
+        it: {
+            "nav.factCheck": "Verifica dei Fatti",
+            "nav.sources": "Fonti",
+            "home.title": "Verifica dei Fatti",
+            "home.subtitle": "Strumento scientifico veloce di verifica dei fatti",
+            "home.modeText": "Solo testo",
+            "home.modeLink": "Solo link",
+            "home.modeBoth": "Testo + Link",
+            "home.textPlaceholder": "Inserisci testo da verificare...",
+            "home.linkPlaceholder": "https://example.com",
+            "home.checkButton": "Verifica",
+            "home.checking": "Verifica in corso...",
+            "results.title": "Risultati",
+            "results.factcheck": "Google FactCheck",
+            "results.search": "Google Search",
+            "results.gemini": "Perplexity AI",
+            "results.domain": "Verifica dominio",
+            "results.score": "Punteggio di credibilità",
+            "results.sources": "Fonti di verifica",
+            "notfound": "Niente trovato",
+            "safe": "✅ Sicuro",
+            "unsafe": "❌ Non sicuro",
+            "notblacklist": "✅ Non nella lista nera",
+            "blacklist": "❌ Nella lista nera",
+            "errorText": "❌ Inserisci testo",
+            "errorLink": "❌ Inserisci un link",
+            "errorBoth": "❌ Riempi tutti i campi",
+            "errorTextShort": "❌ Inserisci testo (minimo 10 caratteri e 2 parole)",
+            "errorQuestion": "❌ Inserisci un'affermazione, non una domanda",
+            "errorSubjective": "❌ Questa è un'affermazione soggettiva e non può essere verificata",
+            "sources.title": "Fonti utili",
+            "sources.subtitle": "Risorse verificate per informazioni aggiuntive",
+            "sources.reuters": "Reuters",
+            "sources.reutersDesc": "Organizzazione internazionale di notizie",
+            "sources.bbc": "BBC Reality Check",
+            "sources.bbcDesc": "Servizio di verifica dei fatti della BBC",
+            "sources.snopes": "Snopes",
+            "sources.snopesDesc": "Sito di verifica di leggende urbane",
+            "sources.politifact": "PolitiFact",
+            "sources.politifactDesc": "Sito di verifica dei fatti, vincitore del premio Pulitzer",
+            "sources.cdc": "CDC",
+            "sources.cdcDesc": "Centri per il Controllo e la Prevenzione delle Malattie",
+            "sources.who": "OMS",
+            "sources.whoDesc": "Organizzazione Mondiale della Sanità",
+            "sources.stopfake": "StopFake",
+            "sources.stopfakeDesc": "Organizzazione ucraina di verifica dei fatti",
+            "sources.vox": "VoxUkraine",
+            "sources.voxDesc": "Piattaforma analitica ucraina",
+            "sources.visit": "Visita",
+            "tips.title": "💡 Consigli per la verifica dei fatti",
+            "tips.checkMultipleSources": "Verifica più fonti",
+            "tips.checkMultipleSourcesDesc": "Verifica sempre le informazioni da più fonti attendibili.",
+            "tips.primarySources": "Cerca fonti primarie",
+            "tips.primarySourcesDesc": "Trova la fonte originale quando possibile.",
+            "tips.checkDate": "Verifica la data di pubblicazione",
+            "tips.checkDateDesc": "Assicurati che le informazioni siano attuali e pertinenti.",
+            "tips.beSkeptical": "Sii scettico",
+            "tips.beSkepticalDesc": "Metti in discussione affermazioni straordinarie e verifica le prove."
         }
     };
 
@@ -276,20 +571,29 @@ document.addEventListener("DOMContentLoaded", () => {
         currentLang = lang;
         localStorage.setItem("lang", lang);
         
+        // Clear results and errors when language changes
+        resultsDiv.innerHTML = '';
+        resultsDiv.classList.add("hidden");
+        loadingDiv.classList.add("hidden");
+        requestMade = false;
+        
+        // Scroll back to form
+        factCheckForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        
         document.querySelectorAll("[data-translate]").forEach(el => {
             const key = el.getAttribute("data-translate");
-            if (translations[lang][key]) {
-                    el.textContent = translations[lang][key];
-                } else if (key === 'home.title') {
-                    el.textContent = 'Перевірка фактів';
-                } else if (key === 'home.subtitle') {
-                    el.textContent = 'За допомогою наукового інструменту перевірки правдивості';
-                }
+            const translation = translations[lang]?.[key];
+            if (translation) {
+                el.textContent = translation;
+            }
         });
         
         document.querySelectorAll("[data-translate-placeholder]").forEach(el => {
             const key = el.getAttribute("data-translate-placeholder");
-            if (translations[lang][key]) el.placeholder = translations[lang][key];
+            const translation = translations[lang]?.[key];
+            if (translation) {
+                el.placeholder = translation;
+            }
         });
 
         const verdictTitle = resultsDiv.querySelector(".verdict-title");
@@ -308,34 +612,57 @@ document.addEventListener("DOMContentLoaded", () => {
             if (title.textContent.includes("🔍")) {
                 title.textContent = `🔍 ${translations[lang]["results.search"]}`;
             }
+            if (title.textContent.includes("🤖")) {
+                title.textContent = `🤖 ${translations[lang]["results.gemini"]}`;
+            }
+            if (title.textContent.includes("🌐")) {
+                title.textContent = `🌐 ${translations[lang]["results.domain"]}`;
+            }
         });
 
         const dynamicEls = resultsDiv.querySelectorAll("[data-translate-dynamic]");
-        if (dynamicEls.length) {
-            dynamicEls.forEach(async el => {
-                const text = el.getAttribute("data-original") || el.textContent;
-                el.setAttribute("data-original", text);
+        for (const el of dynamicEls) {
+            const originalText = el.getAttribute("data-original") || el.textContent;
+            el.setAttribute("data-original", originalText);
+            
+            if (originalText && originalText.length > 20 && lang !== 'uk') {
                 try {
                     const res = await fetch("/translate", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ text, target: lang })
+                        body: JSON.stringify({ text: cleanMarkdown(originalText), target: lang })
                     });
-                    const jd = await res.json();
-                    if (jd.translated) el.textContent = jd.translated;
+                    if (res.ok) {
+                        const jd = await res.json();
+                        if (jd.translated) {
+                            el.textContent = jd.translated;
+                        }
+                    }
                 } catch (e) {
                     console.error("Translate error:", e);
+                    el.textContent = originalText;
                 }
-            });
+            } else {
+                el.textContent = originalText;
+            }
         }
 
         const errorEl = resultsDiv.querySelector(".error-message");
         if (errorEl) {
-            const key = Object.keys(translations.uk).find(k => 
-                translations.uk[k] === errorEl.textContent || translations.en[k] === errorEl.textContent
-            );
-            if (key && translations[lang][key]) {
-                errorEl.textContent = translations[lang][key];
+            const errorText = errorEl.textContent;
+            let found = false;
+            for (const [key, value] of Object.entries(translations[lang] || {})) {
+                if (Object.values(translations.uk || {}).includes(errorText) || 
+                    Object.values(translations.en || {}).includes(errorText)) {
+                    const ukKey = Object.keys(translations.uk || {}).find(k => 
+                        translations.uk[k] === errorText
+                    );
+                    if (ukKey && translations[lang][ukKey]) {
+                        errorEl.textContent = translations[lang][ukKey];
+                        found = true;
+                        break;
+                    }
+                }
             }
         }
     }
@@ -449,7 +776,7 @@ document.addEventListener("DOMContentLoaded", () => {
             html += `
                 <div class="analysis-card">
                     <h3 class="analysis-title">🤖 ${t["results.gemini"]}</h3>
-                    <p class="analysis-content" data-translate-dynamic>${cleanMarkdown(gem.explanation)}</p>
+                    <p class="analysis-content" data-translate-dynamic data-original="${cleanMarkdown(gem.explanation).replace(/"/g, '&quot;')}">${cleanMarkdown(gem.explanation)}</p>
                 </div>
             `;
         }
