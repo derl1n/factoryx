@@ -13,13 +13,12 @@ from flask import send_from_directory
 import re
 from datetime import datetime
 import hashlib
-import sqlite3
 
 load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL")
-USE_SQLITE = not DATABASE_URL or "postgresql" not in DATABASE_URL
-SQLITE_DB = "factcheck.db"
+if not DATABASE_URL:
+    raise ValueError("❌ DATABASE_URL не установлена! Установіть змінну середовища.")
 
 GOOGLE_API_KEY = os.getenv("GOOGLE_FACTCHECK_KEY")
 SAFE_BROWSING_KEY = os.getenv("GOOGLE_SAFE_BROWSING_KEY")
@@ -34,51 +33,59 @@ app = Flask(__name__, template_folder="templates", static_folder="static")
 translator = Translator()
 
 def get_db():
-    if USE_SQLITE:
-        conn = sqlite3.connect(SQLITE_DB)
-        conn.row_factory = sqlite3.Row
+    try:
+        import psycopg2
+        from psycopg2.extras import RealDictCursor
+        conn = psycopg2.connect(DATABASE_URL, cursor_factory=RealDictCursor)
         return conn
-    else:
-        try:
-            import psycopg2
-            from psycopg2.extras import RealDictCursor
-            conn = psycopg2.connect(DATABASE_URL, cursor_factory=RealDictCursor)
-            return conn
-        except Exception as e:
-            print(f"⚠️ PostgreSQL помилка: {e}, використовую SQLite")
-            conn = sqlite3.connect(SQLITE_DB)
-            conn.row_factory = sqlite3.Row
-            return conn
+    except Exception as e:
+        print(f"❌ PostgreSQL помилка: {e}")
+        raise
 
 def init_db():
     try:
         with get_db() as conn:
             cur = conn.cursor()
             
-            if USE_SQLITE:
-                cur.execute('''CREATE TABLE IF NOT EXISTS checks (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    query_hash TEXT,
-                    url_hash TEXT,
-                    score INTEGER,
-                    verdict TEXT,
-                    explanation TEXT,
-                    sources TEXT,
-                    lang TEXT DEFAULT 'uk',
-                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-                )''')
-                cur.execute('CREATE INDEX IF NOT EXISTS idx_query_hash ON checks(query_hash)')
-                cur.execute('CREATE INDEX IF NOT EXISTS idx_lang ON checks(lang)')
-                cur.execute('CREATE INDEX IF NOT EXISTS idx_query_lang ON checks(query_hash, lang)')
-            else:
-                with open("init_db.sql", "r", encoding="utf-8") as f:
-                    sql = f.read()
-                cur.execute(sql)
+            with open("init_db.sql", "r", encoding="utf-8") as f:
+                sql = f.read()
+            cur.execute(sql)
             
             conn.commit()
         print("✅ База даних ініціалізована")
     except Exception as e:
         print(f"⚠️ Помилка ініціалізації БД: {e}")
+
+def migrate_db():
+    """Add missing columns to existing tables"""
+    try:
+        with get_db() as conn:
+            cur = conn.cursor()
+            
+            # Add lang column if missing
+            try:
+                cur.execute("ALTER TABLE checks ADD COLUMN lang VARCHAR(10) DEFAULT 'uk'")
+                conn.commit()
+                print("✅ Додана колонка 'lang'")
+            except Exception as e:
+                if "already exists" in str(e):
+                    print("ℹ️ Колонка 'lang' вже існує")
+                else:
+                    print(f"ℹ️ {e}")
+                conn.rollback()
+            
+            # Create indexes
+            try:
+                cur.execute("CREATE INDEX IF NOT EXISTS idx_lang ON checks(lang)")
+                cur.execute("CREATE INDEX IF NOT EXISTS idx_query_lang ON checks(query_hash, lang)")
+                conn.commit()
+                print("✅ Індекси створені")
+            except Exception as e:
+                print(f"ℹ️ Індекси: {e}")
+                conn.rollback()
+                
+    except Exception as e:
+        print(f"⚠️ Помилка міграції: {e}")
 
 def hash_text(text):
     if not text:
@@ -149,20 +156,30 @@ def detect_url_language(url):
 
 def is_url_safe_language(url, required_lang):
     """Check if URL content is in the required language. Always blocks Russian.
-    More permissive: only block if language is explicitly detected AND doesn't match."""
+    More permissive: allow international domains (.com, .org, .net) for all languages."""
     detected = detect_url_language(url)
     
     # Always block Russian URLs
     if detected == 'ru':
         return False
     
-    # Always allow if no language detected from URL (will check content later if needed)
-    # This allows .com, .org, .net, .io etc. domains to pass
-    if detected is None:
-        return True
+    # Allow international domains (.com, .org, .net, .io, .info, .co, .tv, .news etc)
+    # These are typically multilingual sites that support the requested language
+    international_domains = [
+        '.com', '.org', '.net', '.io', '.info', '.me', '.tv', '.co', '.news',
+        '.world', '.global', '.international', '.media', '.press'
+    ]
+    
+    url_lower = url.lower()
+    for intl_domain in international_domains:
+        if intl_domain in url_lower:
+            return True  # Allow international domains
     
     # Only block if language is explicitly detected and doesn't match required
-    # BUT allow if detected matches required language
+    if detected is None:
+        return True  # No language detected - allow it
+    
+    # Allow if detected language matches required
     match_rules = {
         'uk': ['uk', 'en'],  # Ukrainian can use Ukrainian + English sources
         'en': ['en'],         # English sources for English  
@@ -1597,5 +1614,6 @@ Sitemap: https://factoryx.com.ua/sitemap.xml"""
 
 if __name__ == "__main__":
     init_db()
+    migrate_db()
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=False)
