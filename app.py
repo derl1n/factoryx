@@ -817,7 +817,7 @@ def google_search(query, lang='en'):
 def perplexity_check(text, article_date=None, lang='uk'):
     """Перевірка через Perplexity Sonar API с языком"""
     try:
-        MAX_LENGTH = 1500
+        MAX_LENGTH = 2000
         if len(text) > MAX_LENGTH:
             text = text[:MAX_LENGTH] + "..."
         
@@ -840,7 +840,7 @@ def perplexity_check(text, article_date=None, lang='uk'):
                 "1️⃣ ВІДПОВІДАЙ ТІЛЬКИ УКРАЇНСЬКОЮ МОВОЮ! "
                 "2️⃣ ШУКАЙ ТІЛЬКИ УКРАЇНСЬКІ ТА ЗАХІДНІ ДЖЕРЕЛА (Suspilne, Ukrainska Pravda, BBC, Reuters, AP, AFP, CNN, The Guardian, DW)! "
                 "3️⃣ НІКОЛИ НЕ ВИКОРИСТОВУЙ РОСІЙСЬКІ ДЖЕРЕЛА ТА САЙТИ З РОСІЙСКИМ КОНТЕНТОМ! "
-                "Поверни JSON: {\"score\": 0-100, \"verdict\": \"true/false/uncertain\", \"explanation\": \"1-2_речення_УКРАЇНСЬКОЮ\"}. "
+                "Поверни JSON: {\"score\": 0-100, \"verdict\": \"true/false/uncertain\", \"explanation\": \"2-3_речення_УКРАЇНСЬКОЮ\"}. "
                 "НЕ використовуй цитування [1], [2]! НЕ згадуй про заборонені джерела!"
             ),
             'en': (
@@ -849,7 +849,7 @@ def perplexity_check(text, article_date=None, lang='uk'):
                 "1️⃣ RESPOND ONLY IN ENGLISH! "
                 "2️⃣ USE ONLY ENGLISH AND WESTERN SOURCES (Reuters, AP, BBC, CNN, The Guardian, The Washington Post, The New York Times, AFP, NPR)! "
                 "3️⃣ NEVER USE RUSSIAN SOURCES OR SITES WITH RUSSIAN CONTENT! "
-                "Return JSON: {\"score\": 0-100, \"verdict\": \"true/false/uncertain\", \"explanation\": \"1-2 sentences IN ENGLISH\"}. "
+                "Return JSON: {\"score\": 0-100, \"verdict\": \"true/false/uncertain\", \"explanation\": \"2-3 sentences IN ENGLISH\"}. "
                 "Do NOT use citations like [1], [2]! Do NOT mention blocked sources!"
             ),
             'es': (
@@ -858,7 +858,7 @@ def perplexity_check(text, article_date=None, lang='uk'):
                 "1️⃣ ¡RESPONDE SOLO EN ESPAÑOL! "
                 "2️⃣ ¡USA SOLO FUENTES EN ESPAÑOL Y OCCIDENTALES (Reuters en español, BBC Mundo, CNN en Español, El País, AFP, Infobae)! "
                 "3️⃣ ¡NUNCA USES FUENTES RUSAS O SITIOS CON CONTENIDO RUSO! "
-                "Devuelve JSON: {\"score\": 0-100, \"verdict\": \"true/false/uncertain\", \"explanation\": \"1-2 oraciones EN ESPAÑOL\"}. "
+                "Devuelve JSON: {\"score\": 0-100, \"verdict\": \"true/false/uncertain\", \"explanation\": \"2-3 oraciones EN ESPAÑOL\"}. "
                 "¡NO uses citas [1], [2]! ¡NO menciones fuentes bloqueadas!"
             ),
             'fr': (
@@ -867,7 +867,7 @@ def perplexity_check(text, article_date=None, lang='uk'):
                 "1️⃣ RÉPONDEZ UNIQUEMENT EN FRANÇAIS! "
                 "2️⃣ UTILISEZ UNIQUEMENT DES SOURCES FRANÇAISES ET OCCIDENTALES (AFP, Reuters France, BBC, Le Monde, France 24, Libération, Mediapart)! "
                 "3️⃣ N'UTILISEZ JAMAIS DE SOURCES RUSSES OU DE SITES AVEC DU CONTENU RUSSE! "
-                "Retournez JSON: {\"score\": 0-100, \"verdict\": \"true/false/uncertain\", \"explanation\": \"1-2 phrases EN FRANÇAIS\"}. "
+                "Retournez JSON: {\"score\": 0-100, \"verdict\": \"true/false/uncertain\", \"explanation\": \"2-3 phrases EN FRANÇAIS\"}. "
                 "N'utilisez PAS de citations [1], [2]! Ne mentionnez PAS les sources bloquées!"
             ),
             'de': (
@@ -876,7 +876,7 @@ def perplexity_check(text, article_date=None, lang='uk'):
                 "1️⃣ ANTWORTEN SIE NUR AUF DEUTSCH! "
                 "2️⃣ VERWENDEN SIE NUR DEUTSCHE UND WESTLICHE QUELLEN (Deutsche Welle, Tagesschau, Die Zeit, Der Spiegel, Reuters, BBC, AFP)! "
                 "3️⃣ VERWENDEN SIE NIE RUSSISCHE QUELLEN ODER WEBSITES MIT RUSSISCHEM INHALT! "
-                "Geben Sie JSON zurück: {\"score\": 0-100, \"verdict\": \"true/false/uncertain\", \"explanation\": \"1-2 Sätze AUF DEUTSCH\"}. "
+                "Geben Sie JSON zurück: {\"score\": 0-100, \"verdict\": \"true/false/uncertain\", \"explanation\": \"2-3 Sätze AUF DEUTSCH\"}. "
                 "Verwenden Sie KEINE Zitate [1], [2]! Erwähnen Sie KEINE gesperrten Quellen!"
             ),
             'pl': (
@@ -885,7 +885,7 @@ def perplexity_check(text, article_date=None, lang='uk'):
                 "1️⃣ ODPOWIADAJ TYLKO PO POLSKU! "
                 "2️⃣ UŻYWAJ TYLKO POLSKICH I ZACHODNICH ŹRÓDEŁ (Agencja Reuters, BBC Polskie, Wyborcza, Polityka, Rzeczpospolita, AFP)! "
                 "3️⃣ NIGDY NIE UŻYWAJ ROSYJSKICH ŹRÓDEŁ LUB STRON Z ROSYJSKĄ TREŚCIĄ! "
-                "Zwróć JSON: {\"score\": 0-100, \"verdict\": \"true/false/uncertain\", \"explanation\": \"1-2 zdania PO POLSKU\"}. "
+                "Zwróć JSON: {\"score\": 0-100, \"verdict\": \"true/false/uncertain\", \"explanation\": \"2-3 zdania PO POLSKU\"}. "
                 "NIE używaj cytatów [1], [2]! NIE wspominaj zablokowanych źródeł!"
             ),
             'it': (
@@ -894,7 +894,7 @@ def perplexity_check(text, article_date=None, lang='uk'):
                 "1️⃣ RISPONDI SOLO IN ITALIANO! "
                 "2️⃣ USA SOLO FONTI ITALIANE E OCCIDENTALI (ANSA, Reuters Italia, BBC, La Repubblica, Il Corriere, La Stampa, Euronews)! "
                 "3️⃣ NON USARE MAI FONTI RUSSE O SITI CON CONTENUTO RUSSO! "
-                "Restituisci JSON: {\"score\": 0-100, \"verdict\": \"true/false/uncertain\", \"explanation\": \"1-2 frasi IN ITALIANO\"}. "
+                "Restituisci JSON: {\"score\": 0-100, \"verdict\": \"true/false/uncertain\", \"explanation\": \"2-3 frasi IN ITALIANO\"}. "
                 "NON utilizzare citazioni [1], [2]! NON menzionare fonti bloccate!"
             )
         }
@@ -929,7 +929,7 @@ def perplexity_check(text, article_date=None, lang='uk'):
                 }
             ],
             "temperature": 0.1,
-            "max_tokens": 400,
+            "max_tokens": 600,
             "return_citations": True
         }
         
@@ -973,7 +973,7 @@ def perplexity_check(text, article_date=None, lang='uk'):
                 sentences = [s.strip() for s in sentences if s.strip() and len(s.strip()) > 10]
                 
                 if sentences:
-                    result["explanation"] = ". ".join(sentences[:2]) + "."
+                    result["explanation"] = ". ".join(sentences[:3]) + "."
                 else:
                     if len(filtered_citations) == 0:
                         no_sources_msg = {
@@ -1078,14 +1078,14 @@ def gemini_check(text, long=False):
         text = text[:MAX_LENGTH] + "..."
     
     instruction = (
-        "Перевір факт і поверни JSON: {\"score\":0-100, \"verdict\":\"true/false/uncertain\", \"explanation\":\"1-2 речення\"}. "
+        "Перевір факт і поверни JSON: {\"score\":0-100, \"verdict\":\"true/false/uncertain\", \"explanation\":\"2-3 речення\"}. "
         "Використовуй тільки західні та українські джерела (BBC, Reuters, AP, Suspilne). "
         "🚫 НЕ використовуй російські (.ru, .рф), білоруські (.by), казино та дорослі сайти!"
     )
     
     payload = {
         "contents": [{"parts": [{"text": instruction + "\nФакт: " + text}]}],
-        "generationConfig": {"temperature": 0.2, "maxOutputTokens": 512}
+        "generationConfig": {"temperature": 0.2, "maxOutputTokens": 600}
     }
     
     API = f"https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash-exp:generateContent?key={GEMINI_KEY}"
@@ -1505,7 +1505,7 @@ def check_fact():
                 return jsonify({"error": errors["no_text_extracted"]}), 400
             
             if not text:
-                text = page_text[:500]
+                text = page_text[:1000]
                 
         except Exception as e:
             print(f"⚠️ Помилка завантаження: {e}")

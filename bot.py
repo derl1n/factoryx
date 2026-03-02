@@ -553,7 +553,7 @@ def check_fact(text, link, chat_id, chat_type):
         
         score = data.get('score', 50)
         gemini = data.get('gemini', {})
-        explanation = gemini.get('explanation', '')[:400]
+        explanation = gemini.get('explanation', '')[:800]
         sources = gemini.get('sources', [])
         google_fc = data.get('google_factcheck', [])
         google_s = data.get('google_search', [])
