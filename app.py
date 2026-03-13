@@ -57,7 +57,7 @@ def init_db():
         print(f"⚠️ Помилка ініціалізації БД: {e}")
 
 def migrate_db():
-    """Add missing columns to existing tables"""
+    """Add missing columns to existing tables and create indexes"""
     try:
         with get_db() as conn:
             cur = conn.cursor()
@@ -74,12 +74,17 @@ def migrate_db():
                     print(f"ℹ️ {e}")
                 conn.rollback()
             
-            # Create indexes
+            # Create all indexes
             try:
                 cur.execute("CREATE INDEX IF NOT EXISTS idx_lang ON checks(lang)")
+                cur.execute("CREATE INDEX IF NOT EXISTS idx_query_hash ON checks(query_hash)")
+                cur.execute("CREATE INDEX IF NOT EXISTS idx_url_hash ON checks(url_hash)")
+                cur.execute("CREATE INDEX IF NOT EXISTS idx_created_at ON checks(created_at)")
                 cur.execute("CREATE INDEX IF NOT EXISTS idx_query_lang ON checks(query_hash, lang)")
+                cur.execute("CREATE INDEX IF NOT EXISTS idx_url_lang ON checks(url_hash, lang)")
+                cur.execute("CREATE INDEX IF NOT EXISTS idx_query_url_lang ON checks(query_hash, url_hash, lang)")
                 conn.commit()
-                print("✅ Індекси створені")
+                print("✅ Індекси створені/оновлені")
             except Exception as e:
                 print(f"ℹ️ Індекси: {e}")
                 conn.rollback()
@@ -1197,25 +1202,67 @@ def check_fact():
     if lang not in supported_langs:
         lang = 'en'
     
+    # Determine mode first and compute cache key BEFORE processing the link
+    if text and link:
+        mode = "both"
+        # For "both" mode: hash based on text only for cache (link hash separate)
+        query_hash = hash_text(text)
+        url_hash = hash_text(link)
+    elif text:
+        mode = "text"
+        query_hash = hash_text(text)
+        url_hash = None
+    else:
+        mode = "link"
+        # For link mode: use full link as hash
+        query_hash = hash_text(link)
+        url_hash = hash_text(link)
+    
+    # Check cache BEFORE processing
     if text or link:
         try:
             with get_db() as conn:
                 cur = conn.cursor()
-                query_hash = hash_text(text or link[:200])
                 
-                cur.execute("""
-                    SELECT score, verdict, explanation, sources, created_at 
-                    FROM checks 
-                    WHERE query_hash = %s 
-                AND lang = %s
-                AND created_at > NOW() - INTERVAL '24 hours'
-                ORDER BY created_at DESC 
-                LIMIT 1
-                """, (query_hash, lang))
+                if mode == "link":
+                    # For link-only mode, search by both query_hash and url_hash
+                    cur.execute("""
+                        SELECT score, verdict, explanation, sources, created_at 
+                        FROM checks 
+                        WHERE query_hash = %s 
+                        AND lang = %s
+                        AND created_at > NOW() - INTERVAL '24 hours'
+                        ORDER BY created_at DESC 
+                        LIMIT 1
+                    """, (query_hash, lang))
+                elif mode == "both":
+                    # For "both" mode: match by text hash + url hash
+                    cur.execute("""
+                        SELECT score, verdict, explanation, sources, created_at 
+                        FROM checks 
+                        WHERE query_hash = %s 
+                        AND url_hash = %s
+                        AND lang = %s
+                        AND created_at > NOW() - INTERVAL '24 hours'
+                        ORDER BY created_at DESC 
+                        LIMIT 1
+                    """, (query_hash, url_hash, lang))
+                else:
+                    # For "text" mode: match by text hash only
+                    cur.execute("""
+                        SELECT score, verdict, explanation, sources, created_at 
+                        FROM checks 
+                        WHERE query_hash = %s 
+                        AND lang = %s
+                        AND url_hash IS NULL
+                        AND created_at > NOW() - INTERVAL '24 hours'
+                        ORDER BY created_at DESC 
+                        LIMIT 1
+                    """, (query_hash, lang))
                 
                 cached = cur.fetchone()
                 if cached:
-                    print(f"✅ Cache found! Score: {cached['score']}, lang: {lang}, time: {cached['created_at']}")
+                    print(f"✅ Cache found! Mode: {mode}, Score: {cached['score']}, lang: {lang}, time: {cached['created_at']}")
                     
                     sources = []
                     if cached['sources']:
@@ -1225,7 +1272,7 @@ def check_fact():
                             sources = []
                     
                     return jsonify({
-                        'mode': 'both' if (text and link) else ('text' if text else 'link'),
+                        'mode': mode,
                         'score': cached['score'],
                         'cached': True,
                         'cached_at': cached['created_at'].isoformat(),
@@ -1426,8 +1473,8 @@ def check_fact():
     if text and is_gibberish(text):
         return jsonify({"error": errors["gibberish"]}), 400
     
-    # Check if text language matches selected interface language
-    if text:
+    # Check if text language matches selected interface language (only for original text)
+    if text and mode in ["text", "both"]:
         is_valid, error_msg = validate_text_language(text, lang)
         if not is_valid:
             return jsonify({"error": error_msg}), 400
@@ -1538,8 +1585,8 @@ def check_fact():
     if "error" in gem:
         return jsonify({"error": gem["error"]}), 500
     
-    google_fc = google_factcheck(combined, lang=check_lang) if mode != "link" else []
-    google_s = google_search(combined, lang=check_lang) if mode != "link" else []
+    google_fc = google_factcheck(combined, lang=check_lang)
+    google_s = google_search(combined, lang=check_lang)
     
     score = int(gem.get("score", 50))
     verdict = gem.get("verdict", "uncertain")
@@ -1568,9 +1615,8 @@ def check_fact():
     try:
         with get_db() as conn:
             cur = conn.cursor()
-            query_hash = hash_text(text or combined[:200])
-            url_hash = hash_text(link) if link else None
             
+            # Use the pre-computed hashes from earlier (before page load modified text)
             sources_json = json.dumps(gem.get('sources', []))
             
             cur.execute('''
@@ -1580,7 +1626,7 @@ def check_fact():
                 gem.get('explanation', ''), sources_json, check_lang, datetime.now()))
             
             conn.commit()
-            print(f"✅ Stats saved: score={score}, lang={check_lang}")
+            print(f"✅ Stats saved: score={score}, lang={check_lang}, mode={mode}")
     except Exception as e:
         print(f"❌ Stats: {e}")
 

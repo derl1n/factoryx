@@ -15,6 +15,8 @@ CREATE INDEX IF NOT EXISTS idx_url_hash ON checks(url_hash);
 CREATE INDEX IF NOT EXISTS idx_created_at ON checks(created_at);
 CREATE INDEX IF NOT EXISTS idx_lang ON checks(lang);
 CREATE INDEX IF NOT EXISTS idx_query_lang ON checks(query_hash, lang);
+CREATE INDEX IF NOT EXISTS idx_url_lang ON checks(url_hash, lang);
+CREATE INDEX IF NOT EXISTS idx_query_url_lang ON checks(query_hash, url_hash, lang);
 
 -- Add lang column if it doesn't exist (for migrations from old schema)
 ALTER TABLE IF EXISTS checks ADD COLUMN IF NOT EXISTS lang VARCHAR(10) DEFAULT 'uk';
