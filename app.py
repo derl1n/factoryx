@@ -74,7 +74,6 @@ def migrate_db():
                     print(f"ℹ️ {e}")
                 conn.rollback()
             
-            # Create all indexes
             try:
                 cur.execute("CREATE INDEX IF NOT EXISTS idx_lang ON checks(lang)")
                 cur.execute("CREATE INDEX IF NOT EXISTS idx_query_hash ON checks(query_hash)")
@@ -1585,8 +1584,13 @@ def check_fact():
     if "error" in gem:
         return jsonify({"error": gem["error"]}), 500
     
-    google_fc = google_factcheck(combined, lang=check_lang)
-    google_s = google_search(combined, lang=check_lang)
+    # Only use Google Search/Factcheck for text mode, not for link-only mode
+    if mode == "link":
+        google_fc = []
+        google_s = []
+    else:
+        google_fc = google_factcheck(combined, lang=check_lang)
+        google_s = google_search(combined, lang=check_lang)
     
     score = int(gem.get("score", 50))
     verdict = gem.get("verdict", "uncertain")
